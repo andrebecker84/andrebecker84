@@ -310,7 +310,7 @@ def build_lang_toggle():
             parts.append(f'<rect x="{x}" y="4" width="57" height="30" rx="15" fill="#fff" fill-opacity="0.08"/>')
         parts.append(f'<g transform="translate({x + 9} 11)" opacity="{1 if on else 0.4}"><clipPath id="r{code}"><circle cx="8" cy="8" r="8"/></clipPath>'
                      f'<g clip-path="url(#r{code})">{ROUND_FLAG[code]}</g><circle cx="8" cy="8" r="7.75" fill="none" stroke="#fff" stroke-opacity=".25" stroke-width=".5"/></g>')
-        parts.append(d.t(x + 31, 24, label, 11, TEXT if on else MUTED, "s", ls=1.2))
+        parts.append(d.t(x + 30, 24.5, label, 12.5, TEXT if on else MUTED, "s", ls=1))
     write("lang.svg", d.svg(w, h, "English · Português", "".join(parts)))
 
 
@@ -347,46 +347,46 @@ def build_hero():
     name_w = width(hero["name"], "s", 58)
     tagline = T(hero["tagline"])
     # a frase quebra em duas linhas se não couber antes do diagrama; o bloco sobe para seguir centralizado
-    tag_lines = wrap(tagline, "r", 20, 640)
-    up = 13 * (len(tag_lines) - 1)
+    tag_lines = wrap(tagline, "r", 23, 640)
+    up = 15 * (len(tag_lines) - 1)
     left = [
         f'<rect x="{x0}" y="{123 - up}" width="22" height="2" rx="1" fill="{AMBER}"/>',
-        d.t(x0 + 34, 129 - up, T(hero["kicker"]), 13, LABEL, "m", ls=4),
+        d.t(x0 + 34, 130 - up, T(hero["kicker"]), 16, LABEL, "m", ls=4),
         d.t(x0 - 2, 194 - up, hero["name"], 58, TEXT, "s"),
     ]
-    left += [d.t(x0, 238 - up + i * 27, ln, 20, BODY, "r") for i, ln in enumerate(tag_lines)]
-    chips_y = 270 - up + (len(tag_lines) - 1) * 27
+    left += [d.t(x0, 240 - up + i * 31, ln, 23, BODY, "r") for i, ln in enumerate(tag_lines)]
+    chips_y = 272 - up + (len(tag_lines) - 1) * 31
     cx = x0
     for c in hero["chips"]:
         c = T(c)
-        cw = width(c, "m", 12.5) + 28
-        left.append(f'<rect x="{cx + .5}" y="{chips_y + .5}" width="{cw - 1:.1f}" height="31" rx="15.5" fill="#fff" fill-opacity="0.035" stroke="{CHIP_BORDER}"/>')
-        left.append(d.t(cx + cw / 2, chips_y + 20.5, c, 12.5, BODY, "m", anchor="middle"))
+        cw = width(c, "m", 16) + 30
+        left.append(f'<rect x="{cx + .5}" y="{chips_y + .5}" width="{cw - 1:.1f}" height="37" rx="18.5" fill="#fff" fill-opacity="0.035" stroke="{CHIP_BORDER}"/>')
+        left.append(d.t(cx + cw / 2, chips_y + 24.2, c, 16, BODY, "m", anchor="middle"))
         cx += cw + 10
     assert name_w < 660, name_w
-    assert cx < 720, f"chips invadem o diagrama: {cx}"
+    assert cx - 10 < 724, f"chips invadem o diagrama: {cx}"
 
     # Lado direito: diagrama orientado a eventos (animado)
     BX1, BX2, BY = 744, 1222, 208
-    box_h = 46
+    box_h = 54
 
     # Colunas alinhadas: cada produtor (em cima) fica sobre um consumidor (embaixo),
     # com um único ponto de junção por coluna no barramento.
-    bw = max(width(l, "mono", 12.5) for l, _, _ in hero["top"] + hero["bottom"]) + 60
-    gap = 26
+    bw = max(width(l, "mono", 16) for l, _, _ in hero["top"] + hero["bottom"]) + 66
+    gap = 18
     ncol = len(hero["top"])
     x_start = (BX1 + BX2) / 2 - (ncol * bw + (ncol - 1) * gap) / 2
 
     def boxes(items, y):
         return [(x_start + k * (bw + gap), y, bw, l, ic, col) for k, (l, ic, col) in enumerate(items)]
 
-    top = boxes(hero["top"], 110)
-    bottom = boxes(hero["bottom"], 260)
+    top = boxes(hero["top"], 108)
+    bottom = boxes(hero["bottom"], 256)
     assert len(top) == len(bottom)
     assert top[0][0] > BX1 and bottom[0][0] > BX1, "diagrama largo demais"
     g = [f'<rect x="{BX1}" y="{BY - 1}" width="{BX2 - BX1}" height="2" fill="url(#bus)"/>',
-         d.t(BX1 + 8, BY + 24, "kafka", 11, MUTED, "mono")]
-    assert BX1 + 8 + width("kafka", "mono", 11) < x_start + bw / 2 - 12, "rótulo do barramento encosta no conector"
+         d.t(BX1 + 4, BY + 26, "kafka", 15, MUTED, "mono")]
+    assert BX1 + 4 + width("kafka", "mono", 15) < x_start + bw / 2 - 10, "rótulo do barramento encosta no conector"
     junctions = []
     for i, (x, y, bw, l, ic, color) in enumerate(top + bottom):
         cxm = x + bw / 2
@@ -397,10 +397,10 @@ def build_hero():
             junctions.append(cxm)
         g.append(f'<rect x="{x + .5:.1f}" y="{y + .5}" width="{bw - 1:.1f}" height="{box_h - 1}" rx="10" fill="#111a2e" stroke="{CHIP_BORDER}"/>')
         # quadradinho com o ícone do serviço, na cor do papel dele
-        tx, ty, ts = x + 9, y + (box_h - 28) / 2, 28
-        g.append(f'<rect x="{tx + .5:.1f}" y="{ty + .5}" width="{ts - 1}" height="{ts - 1}" rx="7" fill="{color}" fill-opacity="0.12" stroke="{color}" stroke-opacity="0.38"/>')
-        g.append(f'<g transform="translate({tx + 6:.1f} {ty + 6})" fill="none" stroke="{color}" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round">{ICONS16[ic]}</g>')
-        g.append(d.t(x + 46, y + box_h / 2 + 4.3, l, 12.5, BODY, "mono"))
+        tx, ty, ts = x + 10, y + (box_h - 32) / 2, 32
+        g.append(f'<rect x="{tx + .5:.1f}" y="{ty + .5}" width="{ts - 1}" height="{ts - 1}" rx="8" fill="{color}" fill-opacity="0.12" stroke="{color}" stroke-opacity="0.38"/>')
+        g.append(f'<g transform="translate({tx + 6.4:.1f} {ty + 6.4}) scale(1.2)" fill="none" stroke="{color}" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">{ICONS16[ic]}</g>')
+        g.append(d.t(x + 52, y + box_h / 2 + 5.5, l, 16, BODY, "mono"))
         # pacote viajando entre serviço e barramento
         begin = f"{i * 0.9:.1f}s"
         path = f"M{cxm:.1f} {y1} V{y2}"
@@ -446,10 +446,10 @@ def build_sections():
         d = Doc()
         w, h, ls = 960, 40, 3.2
         label = T(label)
-        end = 34 + width(label, "s", 12.5, ls) + 18
-        body = (d.t(0, 25, f"{n:02d}", 12, BLUE, "mono")
-                + f'<rect x="21" y="16" width="1" height="12" fill="{CHIP_BORDER}"/>'
-                + d.t(34, 25, label, 12.5, TEXT, "s", ls=ls)
+        end = 40 + width(label, "s", 14.5, ls) + 18
+        body = (d.t(0, 26, f"{n:02d}", 14, BLUE, "mono")
+                + f'<rect x="25" y="15" width="1" height="14" fill="{CHIP_BORDER}"/>'
+                + d.t(40, 26, label, 14.5, TEXT, "s", ls=ls)
                 + f'<rect x="{end:.1f}" y="20" width="{w - end:.1f}" height="1" fill="url(#rule)"/>')
         write_themed(f"section-{key}.svg", d.svg(w, h, label.title(), body))
 
@@ -478,18 +478,18 @@ ABOUT = {
 def build_about():
     d = Doc()
     a = ABOUT
-    w, h = 960, 262
-    RX, RW = 486, 440
-    lines = wrap(T(a["text"]), "r", 15, RW)
-    block = len(lines) * 24 + 22 + 29          # texto + respiro + selo
+    w, h = 960, 286
+    RX, RW = 486, 446
+    lines = wrap(T(a["text"]), "r", 16.5, RW)
+    block = len(lines) * 26 + 22 + 33          # texto + respiro + selo
     y0 = (h - block) / 2 + 14                  # coluna da direita centralizada
 
     # Log de eventos: as linhas entram em sequência e o ciclo recomeça
     CYCLE = 11
-    log = [d.t(32, 54, "$", 12.5, GREEN, "mono"),
-           d.t(48, 54, "tail -f profile.events", 12.5, MUTED, "mono")]
+    log = [d.t(32, 56, "$", 14, GREEN, "mono"),
+           d.t(50, 56, "tail -f profile.events", 14, MUTED, "mono")]
     for i, (color, ev, payload) in enumerate(a["events"]):
-        y = 96 + i * 42
+        y = 102 + i * 48
         t0 = (0.8 + i * 1.1) / CYCLE
         t1 = t0 + 0.035
         kt = f"0;{t0:.3f};{t1:.3f};0.93;1"
@@ -497,32 +497,32 @@ def build_about():
                 f'<animateTransform attributeName="transform" type="translate" values="8 0;8 0;0 0;0 0;0 0" keyTimes="{kt}" dur="{CYCLE}s" repeatCount="indefinite"/>')
         log.append(f'<g opacity="0">{anim}'
                    f'<circle cx="37" cy="{y - 4}" r="3.2" fill="{color}"/>'
-                   + d.t(50, y, ev, 12.5, TEXT, "mono")
-                   + d.t(50, y + 17, T(payload), 11.5, MUTED, "mono")
+                   + d.t(50, y, ev, 14, TEXT, "mono")
+                   + d.t(50, y + 19, T(payload), 13, MUTED, "mono")
                    + '</g>')
-    cy = 96 + len(a["events"]) * 42 + 4
-    log.append(f'<rect x="32" y="{cy - 12}" width="8" height="15" rx="1" fill="{GREEN}">'
+    cy = 102 + len(a["events"]) * 48 + 2
+    log.append(f'<rect x="32" y="{cy - 13}" width="8" height="16" rx="1" fill="{GREEN}">'
                '<animate attributeName="opacity" values="1;0" dur="1.05s" calcMode="discrete" repeatCount="indefinite"/></rect>')
 
-    right = [d.t(RX, y0 + i * 24, ln, 15, BODY, "r") for i, ln in enumerate(lines)]
+    right = [d.t(RX, y0 + i * 26, ln, 16.5, BODY, "r") for i, ln in enumerate(lines)]
     # selo de localização e modalidades, em pílula com tom azul
-    top = y0 + (len(lines) - 1) * 24 + 22
+    top = y0 + (len(lines) - 1) * 26 + 22
     colors = {"text": TEXT, "pref": BLUE, "alt": MUTED}
     x = RX + 34
     pill_parts = []
     for i, (label, face, kind) in enumerate(a["place"]):
         label = T(label)
         if i:
-            pill_parts.append(d.t(x + 7, top + 19.5, "·", 12.5, MUTED, "r"))
-            x += width("·", "r", 12.5) + 14
-        pill_parts.append(d.t(x, top + 19.5, label, 12.5, colors[kind], face))
-        x += width(label, face, 12.5)
+            pill_parts.append(d.t(x + 7, top + 21.5, "·", 14, MUTED, "r"))
+            x += width("·", "r", 14) + 14
+        pill_parts.append(d.t(x, top + 21.5, label, 14, colors[kind], face))
+        x += width(label, face, 14)
     pill_w = x + 16 - RX
     assert RX + pill_w < w - 24, "selo de localização estoura o painel"
-    assert top + 29 < h - 16, "texto do About não cabe no painel"
-    right.append(f'<rect x="{RX + .5}" y="{top + .5}" width="{pill_w - 1:.1f}" height="29" rx="14.5" '
+    assert top + 33 < h - 16, "texto do About não cabe no painel"
+    right.append(f'<rect x="{RX + .5}" y="{top + .5}" width="{pill_w - 1:.1f}" height="33" rx="16.5" '
                  f'fill="{BLUE}" fill-opacity="0.10" stroke="{BLUE}" stroke-opacity="0.38"/>')
-    right.append(f'<g transform="translate({RX + 13} {top + 7.5})" fill="none" stroke="{BLUE}" stroke-width="1.5">'
+    right.append(f'<g transform="translate({RX + 13} {top + 9.5})" fill="none" stroke="{BLUE}" stroke-width="1.5">'
                  '<path d="M6 1.5a4.5 4.5 0 0 1 4.5 4.5c0 3.4-4.5 8-4.5 8S1.5 9.4 1.5 6A4.5 4.5 0 0 1 6 1.5Z"/><circle cx="6" cy="6" r="1.6"/></g>')
     right += pill_parts
 
@@ -543,23 +543,23 @@ NOW = {
 
 def build_now():
     d = Doc()
-    w, h = 960, 78
+    w, h = 960, 90
     label = T(NOW["label"])
-    lx = 58
-    div = lx + width(label, "s", 11, 3) + 20
+    lx = 60
+    div = lx + width(label, "s", 12.5, 3) + 22
     body = f"""{panel(w, h, 14, tint=GREEN, horizontal=True, strength=0.13)}
-<circle cx="34" cy="39" r="4" fill="none" stroke="{GREEN}" stroke-width="1.5">
+<circle cx="34" cy="45" r="4" fill="none" stroke="{GREEN}" stroke-width="1.5">
   <animate attributeName="r" values="4;15" dur="2s" repeatCount="indefinite"/>
   <animate attributeName="stroke-opacity" values="0.7;0" dur="2s" repeatCount="indefinite"/>
 </circle>
-<circle cx="34" cy="39" r="9" fill="{GREEN}" fill-opacity="0.18"/>
-<circle cx="34" cy="39" r="4.5" fill="{GREEN}">
+<circle cx="34" cy="45" r="9" fill="{GREEN}" fill-opacity="0.18"/>
+<circle cx="34" cy="45" r="4.5" fill="{GREEN}">
   <animate attributeName="fill-opacity" values="1;0.55;1" dur="2s" repeatCount="indefinite"/>
 </circle>
-{d.t(lx, 43, label, 11, GREEN, "s", ls=3)}
-<rect x="{div:.1f}" y="22" width="1" height="34" fill="{BORDER}"/>
-{d.t(div + 22, 36, T(NOW["headline"]), 15, TEXT, "m")}
-{d.t(div + 22, 57, NOW["stack"], 11.5, BODY, "mono")}"""
+{d.t(lx, 49.5, label, 12.5, GREEN, "s", ls=3)}
+<rect x="{div:.1f}" y="24" width="1" height="42" fill="{BORDER}"/>
+{d.t(div + 24, 41, T(NOW["headline"]), 17, TEXT, "m")}
+{d.t(div + 24, 65, NOW["stack"], 13, BODY, "mono")}"""
     write("now.svg", d.svg(w, h, f'{label}: {T(NOW["headline"])} · {NOW["stack"]}', body))
 
 
@@ -585,19 +585,19 @@ PILLARS = [
 def build_pillars():
     """Grade 3 × 2: ícone e título lado a lado, palavras-chave embaixo."""
     d = Doc()
-    w, gap, ch, cols = 960, 16, 138, 3
+    w, gap, ch, cols = 960, 16, 150, 3
     cw = (w - gap * (cols - 1)) / cols
     rows = (len(PILLARS) + cols - 1) // cols
     h = rows * ch + (rows - 1) * gap
     parts = []
     for i, (icon, color, title, kws) in enumerate(PILLARS):
         x, y = (i % cols) * (cw + gap), (i // cols) * (ch + gap)
-        kw = "".join(d.t(20, 98 + j * 18, T(k), 11, BODY, "mono") for j, k in enumerate(kws))
+        kw = "".join(d.t(20, 102 + j * 21, T(k), 12.5, BODY, "mono") for j, k in enumerate(kws))
         parts.append(f"""<g transform="translate({x:.1f} {y})">
   {panel(cw, ch, 14, tint=color, strength=0.09)}
   {tile(20, 20, 42, color, ICONS[icon])}
-  {d.t(76, 47, T(title), 15.5, TEXT, "s")}
-  <rect x="20" y="76" width="22" height="2" rx="1" fill="{color}"/>
+  {d.t(76, 47.5, T(title), 17, TEXT, "s")}
+  <rect x="20" y="77" width="22" height="2" rx="1" fill="{color}"/>
   {kw}
 </g>""")
     write("focus.svg", d.svg(w, h, " · ".join(T(p[2]) for p in PILLARS), "\n".join(parts)))
@@ -650,28 +650,30 @@ PROJECTS = [
 
 
 def build_projects():
-    w, h = 480, 228
+    w = 480
+    nmax = max(len(wrap(T(p["desc"]), "r", 15, w - 52)) for p in PROJECTS)
+    h = round(108 + (nmax - 1) * 22.5 + 74)
     for p in PROJECTS:
         d = Doc()
-        lines = wrap(T(p["desc"]), "r", 13.5, w - 56)
-        y = 106
+        lines = wrap(T(p["desc"]), "r", 15, w - 52)
+        y = 108
         body = [panel(w, h),
                 f'<circle cx="31" cy="36" r="3.5" fill="{p["color"]}"/>',
-                d.t(44, 40, T(p["tag"]), 10.5, LABEL, "s", ls=2),
+                d.t(44, 40.5, T(p["tag"]), 12, LABEL, "s", ls=1.8),
                 arrow(w - 44, 27),
                 f'<g transform="translate(23 53) scale(1.1)" fill="{p["color"]}" fill-opacity="0.14" stroke="{p["color"]}" '
                 f'stroke-width="1.45" stroke-linejoin="round">{ICONS["folder"]}</g>',
-                d.t(57, 76, T(p["title"]), 21, TEXT, "s")]
-        assert 57 + width(T(p["title"]), "s", 21) < w - 26, f"título longo demais: {T(p['title'])}"
+                d.t(57, 77, T(p["title"]), 22, TEXT, "s")]
+        assert 57 + width(T(p["title"]), "s", 22) < w - 26, f"título longo demais: {T(p['title'])}"
         for ln in lines:
-            body.append(d.t(26, y, ln, 13.5, DESC, "r"))
-            y += 20.5
-        assert y - 20.5 < h - 56, (p["slug"], LANG, y)   # última linha acima dos chips
+            body.append(d.t(26, y, ln, 15, DESC, "r"))
+            y += 22.5
+        assert y - 22.5 < h - 70, (p["slug"], LANG, y)   # última linha acima dos chips
         cx = 26
         for c in p["chips"]:
-            cw = width(c, "m", 11) + 24
-            body.append(f'<rect x="{cx + .5}" y="{h - 46.5}" width="{cw - 1:.1f}" height="25" rx="12.5" fill="#fff" fill-opacity="0.035" stroke="{CHIP_BORDER}"/>')
-            body.append(d.t(cx + cw / 2, h - 30, c, 11, LABEL, "m", anchor="middle"))
+            cw = width(c, "m", 12.5) + 26
+            body.append(f'<rect x="{cx + .5}" y="{h - 49.5}" width="{cw - 1:.1f}" height="29" rx="14.5" fill="#fff" fill-opacity="0.035" stroke="{CHIP_BORDER}"/>')
+            body.append(d.t(cx + cw / 2, h - 30.5, c, 12.5, LABEL, "m", anchor="middle"))
             cx += cw + 8
         write(f"project-{p['slug']}.svg", d.svg(w, h, f'{T(p["title"])}: {T(p["desc"])}', "\n".join(body)))
 
@@ -691,15 +693,15 @@ def build_links():
         d = Doc()
         locked = icon == "contact"   # seção fechada: cadeado no canto do ícone e chave no lugar da seta
         body = (panel(w, h, 14) + tile(16, 16, 36, color, ICONS[icon], r=9)
-                + d.t(66, 31, T(label), 14.5, TEXT, "s")
-                + d.t(66, 49, T(sub), 11, MUTED, "mono"))
+                + d.t(66, 31, T(label), 16, TEXT, "s")
+                + d.t(66, 50, T(sub), 12.5, MUTED, "mono"))
         if locked:
             body += (f'<circle cx="50" cy="50" r="8.5" fill="{SURF_BOT}" stroke="{color}" stroke-opacity="0.5"/>'
                      f'<g transform="translate(44.5 44.5) scale(.92)" fill="none" stroke="{color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">'
                      '<rect x="2.4" y="5.4" width="7.2" height="5" rx="1.3"/><path d="M4.1 5.4V4a1.9 1.9 0 0 1 3.8 0v1.4"/></g>'
                      f'<g transform="translate({w - 41} 25) scale(1.15)" fill="none" stroke="{color}" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">'
                      '<circle cx="4.8" cy="8" r="2.9"/><path d="M7.7 8h6.6M12.1 8v2.4M14.3 8v1.7"/></g>')
-            assert 66 + width(T(sub), "mono", 11) < w - 46, f"subtítulo do contato encosta na chave ({LANG})"
+            assert 66 + width(T(sub), "mono", 12.5) < w - 46, f"subtítulo do contato encosta na chave ({LANG})"
         else:
             body += arrow(w - 36, 27)
         write(f"link-{icon}.svg", d.svg(w, h, f"{T(label)}: {T(sub)}", body))
@@ -721,11 +723,11 @@ JOURNEY = {
 
 def build_journey():
     d = Doc()
-    w, h = 960, 236
+    w, h = 960, 250
     LY, T_ = 112, 42                      # linha do tempo e tamanho do ícone
     col = (w - 64) / 3
     parts = [panel(w, h),
-             d.t(32, 56, T(JOURNEY["hook"]), 18, TEXT, "s"),
+             d.t(32, 57, T(JOURNEY["hook"]), 20, TEXT, "s"),
              f'<defs><linearGradient id="tl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="{VIOLET}" stop-opacity="0.5"/>'
              f'<stop offset="0.5" stop-color="{ROSE}" stop-opacity="0.5"/><stop offset="1" stop-color="{GREEN}" stop-opacity="0.6"/></linearGradient></defs>',
              f'<rect x="40" y="{LY - .75}" width="{w - 80}" height="1.5" fill="url(#tl)"/>']
@@ -739,10 +741,11 @@ def build_journey():
                          '<animateTransform attributeName="transform" type="scale" values="1;1.35" dur="2s" repeatCount="indefinite"/></rect></g>')
         parts.append(f'<rect x="{x - 3}" y="{ty - 3}" width="{T_ + 6}" height="{T_ + 6}" rx="13" fill="{SURF_TOP}"/>')
         parts.append(tile(x, ty, T_, color, ICONS[icon], r=11))
-        parts += [cal(x, LY + 50, color, 11.5),
-                  d.t(x + 17, LY + 50, T(period), 11.5, color, "mono"),
-                  d.t(x, LY + 76, T(role), 16, TEXT, "s"),
-                  d.t(x, LY + 99, T(where), 12.5, BODY, "r")]
+        parts += [cal(x, LY + 52, color, 13),
+                  d.t(x + 19, LY + 52, T(period), 13, color, "mono"),
+                  d.t(x, LY + 80, T(role), 17.5, TEXT, "s"),
+                  d.t(x, LY + 105, T(where), 14, BODY, "r")]
+        assert x + width(T(where), "r", 14) < 32 + (i + 1) * col - 8, f"linha da trajetória encosta na próxima: {T(where)}"
     write("journey.svg", d.svg(w, h, T(JOURNEY["hook"]) + " " + " → ".join(T(s[3]) for s in JOURNEY["steps"]), "\n".join(parts)))
 
 
@@ -771,14 +774,14 @@ EDUCATION = [
 
 def build_education():
     d = Doc()
-    w, h, gap = 960, 214, 16
+    w, h, gap = 960, 232, 16
     cw = (w - gap * 2) / 3
     parts = []
     for i, (icon, color, title, items) in enumerate(EDUCATION):
         x = i * (cw + gap)
         g = [panel(cw, h, 14, tint=color, strength=0.07), tile(20, 20, 40, color, ICONS[icon]),
-             d.t(74, 46, T(title), 15.5, TEXT, "s")]
-        y = 96
+             d.t(74, 46.5, T(title), 17, TEXT, "s")]
+        y = 98
         if icon == "cap":  # título + linha de apoio
             for course, inst, period, status in items:
                 course = T(course)
@@ -786,51 +789,49 @@ def build_education():
                 if inst in INST_LOGOS:  # logo da instituição na frente do item
                     g.append(seal(20, y - 13, 30, inst))
                     tx = 62
-                px = tx + width(inst, "r", 11.5) + 10
-                g += [d.t(tx, y, course, 13.5, TEXT, "m"),
-                      d.t(tx, y + 18, inst, 11.5, MUTED, "r"),
-                      cal(px, y + 18, MUTED, 10.5),
-                      d.t(px + 15, y + 18, period, 11.5, MUTED, "r")]
-                assert px + 15 + width(period, "r", 11.5) < cw - 16, f"período estoura o cartão: {course}"
+                px = tx + width(inst, "r", 12.5) + 10
+                g += [d.t(tx, y, course, 14.5, TEXT, "m"),
+                      d.t(tx, y + 20, inst, 12.5, MUTED, "r"),
+                      cal(px, y + 20, MUTED, 12),
+                      d.t(px + 17, y + 20, period, 12.5, MUTED, "r")]
+                assert px + 17 + width(period, "r", 12.5) < cw - 16, f"período estoura o cartão: {course}"
                 extra = 0
                 if status:  # badge verde ao lado do título; se não couber, numa linha própria
                     status = T(status)
-                    sw = width(status, "m", 9.5) + 14
-                    sx, sy = tx + width(course, "m", 13.5) + 8, y - 12.5
+                    sw = width(status, "m", 12) + 18
+                    sx, sy = tx + width(course, "m", 14.5) + 8, y - 15
                     if sx + sw > cw - 16:
-                        sx, sy, extra = tx, y + 27, 26
-                    g += [f'<rect x="{sx + .5:.1f}" y="{sy}" width="{sw - 1:.1f}" height="17" rx="8.5" fill="{GREEN}" fill-opacity="0.12" stroke="{GREEN}" stroke-opacity="0.42"/>',
-                          d.t(sx + sw / 2, sy + 11.7, status, 9.5, GREEN, "m", anchor="middle")]
-                y += 50 + extra
+                        sx, sy, extra = tx, y + 29, 28
+                    g += [f'<rect x="{sx + .5:.1f}" y="{sy}" width="{sw - 1:.1f}" height="21" rx="10.5" fill="{GREEN}" fill-opacity="0.12" stroke="{GREEN}" stroke-opacity="0.42"/>',
+                          d.t(sx + sw / 2, sy + 14.6, status, 12, GREEN, "m", anchor="middle")]
+                y += 54 + extra
                 assert y - 32 < h - 16, f"formação não cabe no cartão ({LANG})"
         elif icon == "globe":  # idiomas: nível em badge
             for code, name, level, lc, note in items:
                 level = T(level)
-                bw = width(level, "m", 10.5) + 18
+                bw = width(level, "m", 12) + 20
                 bx = cw - 20 - bw
-                g += [flag(20, y, code), d.t(46, y, T(name), 12.5, BODY, "r")]
+                g += [flag(20, y, code), d.t(46, y, T(name), 14, BODY, "r")]
                 if note:  # meta: B2 → C1, o C1 em selo tracejado
                     note = T(note)
-                    nw = width(note, "m", 10.5) + 18
+                    nw = width(note, "m", 12) + 20
                     nx = cw - 20 - nw
                     ax = nx - 8 - 12
-                    g += [f'<rect x="{nx + .5:.1f}" y="{y - 14.5}" width="{nw - 1:.1f}" height="20" rx="10" fill="none" stroke="{lc}" stroke-opacity="0.6" stroke-dasharray="3 2.5"/>',
-                          d.t(nx + nw / 2, y - .5, note, 10.5, lc, "m", anchor="middle"),
+                    g += [f'<rect x="{nx + .5:.1f}" y="{y - 16}" width="{nw - 1:.1f}" height="22" rx="11" fill="none" stroke="{lc}" stroke-opacity="0.6" stroke-dasharray="3 2.5"/>',
+                          d.t(nx + nw / 2, y - .2, note, 12, lc, "m", anchor="middle"),
                           f'<path d="M{ax:.1f} {y - 4.5}h12m-3.6-3.6 3.6 3.6-3.6 3.6" fill="none" stroke="{BODY}" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>']
                     bx = ax - 8 - bw
-                g += [f'<rect x="{bx + .5:.1f}" y="{y - 14.5}" width="{bw - 1:.1f}" height="20" rx="10" fill="{lc}" fill-opacity="0.12" stroke="{lc}" stroke-opacity="0.42"/>',
-                      d.t(bx + bw / 2, y - .5, level, 10.5, lc, "m", anchor="middle")]
-                assert 46 + width(T(name), "r", 12.5) + 12 < bx, "nível do idioma encosta no nome"
-                y += 30
+                g += [f'<rect x="{bx + .5:.1f}" y="{y - 16}" width="{bw - 1:.1f}" height="22" rx="11" fill="{lc}" fill-opacity="0.12" stroke="{lc}" stroke-opacity="0.42"/>',
+                      d.t(bx + bw / 2, y - .2, level, 12, lc, "m", anchor="middle")]
+                assert 46 + width(T(name), "r", 14) + 12 < bx, "nível do idioma encosta no nome"
+                y += 34
         else:  # lista com o ano à direita
             for name, year in items:
                 name = T(name)
-                g += [d.t(20, y, name, 12.5, BODY, "r"),
-                      d.t(cw - 20, y, year, 11, MUTED, "mono", anchor="end")]
-                ix = cw - 20 - width(year, "mono", 11) - 16
-                g.append(cal(ix, y, MUTED, 10.5))
-                assert 20 + width(name, "r", 12.5) < ix - 8, f"título encosta no calendário: {name}"
-                y += 26
+                g += [d.t(20, y, name, 13.5, BODY, "r"),
+                      d.t(cw - 20, y, year, 12.5, MUTED, "mono", anchor="end")]
+                assert 20 + width(name, "r", 13.5) < cw - 20 - width(year, "mono", 12.5) - 10, f"título encosta no ano: {name}"
+                y += 30
         parts.append(f'<g transform="translate({x:.1f} 0)">{"".join(g)}</g>')
     write("education.svg", d.svg(w, h, " · ".join(T(e[2]) for e in EDUCATION), "\n".join(parts)))
 
@@ -850,28 +851,28 @@ def build_details():
     d = Doc()
     label = T(ALL_REPOS)
     h = 44
-    w = int(width(label, "s", 11, 2.4) + 84)
+    w = int(width(label, "s", 12.5, 2.2) + 86)
     body = (f'<rect x=".5" y=".5" width="{w - 1}" height="{h - 1}" rx="{h / 2}" fill="url(#surf)" stroke="{CHIP_BORDER}"/>'
             f'<rect x="{h / 2}" y=".5" width="{w - h}" height="1" fill="url(#hl)"/>'
-            + d.t(w / 2 - 8, 27, label, 11, LABEL, "s", ls=2.4, anchor="middle") + arrow(w - 36, 15, BLUE))
+            + d.t(w / 2 - 8, 27.5, label, 12.5, LABEL, "s", ls=2.2, anchor="middle") + arrow(w - 36, 15, BLUE))
     write("all-repos.svg", d.svg(w, h, label.capitalize(), body))
 
     # legendas da toolbox
     for key, label in CAPTIONS.items():
         d = Doc()
         w, h = 620, 22
-        line = d.t(w / 2, 15, T(label), 10.5, LABEL, "s", ls=2.6, anchor="middle")
+        line = d.t(w / 2, 16, T(label), 12, LABEL, "s", ls=2.4, anchor="middle")
         write_themed(f"caption-{key}.svg", d.svg(w, h, T(label).capitalize(), line))
 
     # rodapé
     d = Doc()
-    w, h = 960, 112
+    w, h = 960, 114
     body = (f'<defs><linearGradient id="fl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="{BORDER}" stop-opacity="0"/>'
             f'<stop offset="0.5" stop-color="{CHIP_BORDER}"/><stop offset="1" stop-color="{BORDER}" stop-opacity="0"/></linearGradient></defs>'
             f'<rect x="0" y="12" width="{w}" height="1" fill="url(#fl)"/>'
             '<!--light-only-->'
             f'<svg x="{w / 2 - 34}" y="22" width="68" height="68" viewBox="0 0 96 96" overflow="visible">{bkr_glyph()}</svg>'
-            + d.t(w / 2, 100, T(THANKS), 13, BODY, "r", anchor="middle"))
+            + d.t(w / 2, 102, T(THANKS), 15, BODY, "r", anchor="middle"))
     # no tema claro o símbolo (prateado) ganha um ladrilho escuro para ter contraste
     tile_light = f'<rect x="{w / 2 - 38}" y="28" width="76" height="56" rx="16" fill="{SURF_TOP}"/>'
     write_themed("footer.svg", d.svg(w, h, T(THANKS), body), tile_light)
