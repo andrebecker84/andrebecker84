@@ -751,7 +751,7 @@ EDUCATION = [
     ("globe", CYAN, {"en": "Languages", "pt": "Idiomas"}, [
         # (bandeira, idioma, nível no badge, cor, observação)
         ("br", {"en": "Portuguese", "pt": "Português"}, {"en": "Native", "pt": "Nativo"}, GREEN, ""),
-        ("gb", {"en": "English", "pt": "Inglês"}, "B2", BLUE, {"en": "focus on C1", "pt": "foco no C1"}),
+        ("gb", {"en": "English", "pt": "Inglês"}, "B2", BLUE, "C1"),
         ("jp", {"en": "Japanese", "pt": "Japonês"}, "JLPT N3", ROSE, ""),
     ]),
 ]
@@ -799,10 +799,12 @@ def build_education():
                 g += [flag(20, y, code), d.t(46, y, T(name), 12.5, BODY, "r"),
                       f'<rect x="{bx + .5:.1f}" y="{y - 14.5}" width="{bw - 1:.1f}" height="20" rx="10" fill="{lc}" fill-opacity="0.12" stroke="{lc}" stroke-opacity="0.42"/>',
                       d.t(bx + bw / 2, y - .5, level, 10.5, lc, "m", anchor="middle")]
-                if note:
+                if note:  # meta: "→ C1", seta clara e nível na cor do badge
                     note = T(note)
-                    g.append(d.t(bx - 9, y - .5, note, 11, LABEL, "r", anchor="end"))
-                    assert 46 + width(T(name), "r", 12.5) + 12 < bx - 9 - width(note, "r", 11), "nota do idioma encosta no nome"
+                    nx = bx - 9 - width(note, "m", 11)
+                    g += [d.t(bx - 9, y - .5, note, 11, lc, "m", anchor="end"),
+                          d.t(nx - 5, y - .5, "→", 11, BODY, "m", anchor="end")]
+                    assert 46 + width(T(name), "r", 12.5) + 12 < nx - 5 - width("→", "m", 11), "nota do idioma encosta no nome"
                 y += 30
         else:  # lista com o ano à direita
             for name, year in items:
