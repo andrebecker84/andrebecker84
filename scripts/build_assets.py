@@ -327,13 +327,11 @@ def build_mylinks_pill():
     d = Doc()
     h = 38
     label = "my-links"
-    w = int(46 + width(label, "s", 12.5, 0.6) + 40)
+    w = int(42 + width(label, "s", 12.5, 0.6) + 18)
     body = (f'<rect x=".5" y=".5" width="{w - 1}" height="{h - 1}" rx="{h / 2}" fill="url(#surf)" stroke="{CHIP_BORDER}"/>'
             f'<rect x="4" y="4" width="{w - 8}" height="{h - 8}" rx="{(h - 8) / 2}" fill="{CYAN}" fill-opacity="0.08"/>'
             f'<g transform="translate(13 7) scale(.86)" fill="none" stroke="{CYAN}" stroke-width="1.8" stroke-linecap="round">{ICONS["links"]}</g>'
-            + d.t(42, 24.5, label, 12.5, TEXT, "s", ls=0.6)
-            + f'<g transform="translate({w - 30} 12) scale(.85)" fill="none" stroke="{CYAN}" stroke-width="1.6" stroke-linecap="round">'
-              '<path d="M3 11 11 3M5 3h6v6"/></g>')
+            + d.t(42, 24.5, label, 12.5, TEXT, "s", ls=0.6))
     write("my-links.svg", d.svg(w, h, "my-links", body))
 
 
@@ -506,37 +504,54 @@ ABOUT = {
 def build_about():
     d = Doc()
     a = ABOUT
-    w, h = 960, 240
-    # divisória logo depois da linha mais longa do log; o texto ocupa o resto
+    w, h = 960, 250
+    # janela de terminal à esquerda, do tamanho da linha mais longa do log; o texto ocupa o resto
     log_w = max([width("tail -f profile.events", "mono", 14)]
                 + [width(ev, "mono", 14) for _, ev, _ in a["events"]]
                 + [width(T(pl), "mono", 13) for _, _, pl in a["events"]])
-    DIV = round(50 + log_w + 44)
-    RX = DIV + 36
+    TX, TY, BAR = 18, 18, 30
+    TW, TH = round(54 + log_w + 24 - TX), h - 2 * TY
+    RX = TX + TW + 36
     RW = w - RX - 36
     lines = wrap(T(a["text"]), "l", 16.5, RW)
     block = len(lines) * 26 + 22 + 33          # texto + respiro + selo
     y0 = (h - block) / 2 + 14                  # coluna da direita centralizada
 
+    term = [f'<defs><clipPath id="tc"><rect x="{TX}" y="{TY}" width="{TW}" height="{TH}" rx="12"/></clipPath>'
+            '<pattern id="scan" width="4" height="3" patternUnits="userSpaceOnUse"><rect width="4" height="1" fill="#fff" fill-opacity="0.025"/></pattern>'
+            f'<radialGradient id="glow" cx="0.2" cy="0.25" r="0.9"><stop offset="0" stop-color="{GREEN}" stop-opacity="0.07"/>'
+            f'<stop offset="1" stop-color="{GREEN}" stop-opacity="0"/></radialGradient></defs>',
+            f'<rect x="{TX + .5}" y="{TY + .5}" width="{TW - 1}" height="{TH - 1}" rx="12" fill="#070b14"/>',
+            f'<g clip-path="url(#tc)"><rect x="{TX}" y="{TY}" width="{TW}" height="{BAR}" fill="#fff" fill-opacity="0.035"/>'
+            f'<rect x="{TX}" y="{TY + BAR}" width="{TW}" height="{TH - BAR}" fill="url(#glow)"/>'
+            f'<rect x="{TX}" y="{TY + BAR}" width="{TW}" height="{TH - BAR}" fill="url(#scan)"/></g>',
+            f'<rect x="{TX}" y="{TY + BAR}" width="{TW}" height="1" fill="{BORDER}"/>',
+            f'<rect x="{TX + .5}" y="{TY + .5}" width="{TW - 1}" height="{TH - 1}" rx="12" fill="none" stroke="{CHIP_BORDER}"/>']
+    for k, c in enumerate(("#ff5f57", "#febc2e", "#28c840")):   # botões da janela, discretos
+        term.append(f'<circle cx="{TX + 17 + k * 15}" cy="{TY + BAR / 2}" r="4.2" fill="{c}" fill-opacity="0.75"/>')
+    term.append(d.t(TX + TW / 2 + 22, TY + BAR / 2 + 4, "andre@bkr: ~", 11.5, MUTED, "mono", anchor="middle"))
+
     # Log de eventos: as linhas entram em sequência e o ciclo recomeça
     CYCLE = 11
-    log = [d.t(32, 52, "$", 14, GREEN, "mono"),
-           d.t(50, 52, "tail -f profile.events", 14, MUTED, "mono")]
+    cmd_y = TY + BAR + 28
+    log = [d.t(36, cmd_y, "$", 14, GREEN, "mono"),
+           d.t(54, cmd_y, "tail -f profile.events", 14, MUTED, "mono")]
     for i, (color, ev, payload) in enumerate(a["events"]):
-        y = 90 + i * 40
+        y = cmd_y + 36 + i * 36
         t0 = (0.8 + i * 1.1) / CYCLE
         t1 = t0 + 0.035
         kt = f"0;{t0:.3f};{t1:.3f};0.93;1"
         anim = (f'<animate attributeName="opacity" values="0;0;1;1;0" keyTimes="{kt}" dur="{CYCLE}s" repeatCount="indefinite"/>'
                 f'<animateTransform attributeName="transform" type="translate" values="8 0;8 0;0 0;0 0;0 0" keyTimes="{kt}" dur="{CYCLE}s" repeatCount="indefinite"/>')
         log.append(f'<g opacity="0">{anim}'
-                   f'<circle cx="37" cy="{y - 4}" r="3.2" fill="{color}"/>'
-                   + d.t(50, y, ev, 14, TEXT, "mono")
-                   + d.t(50, y + 19, T(payload), 13, MUTED, "mono")
+                   f'<circle cx="41" cy="{y - 4}" r="3.2" fill="{color}"/>'
+                   + d.t(54, y, ev, 14, TEXT, "mono")
+                   + d.t(54, y + 17, T(payload), 13, MUTED, "mono")
                    + '</g>')
-    cy = 90 + len(a["events"]) * 40 + 2
-    log.append(f'<rect x="32" y="{cy - 13}" width="8" height="16" rx="1" fill="{GREEN}">'
+    cy = cmd_y + 36 + len(a["events"]) * 36
+    log.append(f'<rect x="36" y="{cy - 13}" width="8" height="16" rx="1" fill="{GREEN}">'
                '<animate attributeName="opacity" values="1;0" dur="1.05s" calcMode="discrete" repeatCount="indefinite"/></rect>')
+    log = term + log
 
     right = [d.t(RX, y0 + i * 26, ln, 16.5, BODY, "l") for i, ln in enumerate(lines)]
     # selo de localização e modalidades, em pílula com tom azul
@@ -554,7 +569,7 @@ def build_about():
     pill_w = x + 16 - RX
     assert RX + pill_w < w - 24, "selo de localização estoura o painel"
     assert top + 33 < h - 16, "texto do About não cabe no painel"
-    assert cy + 3 < h - 20, "log do About não cabe no painel"
+    assert cy + 3 < TY + TH - 8, "log do About não cabe no terminal"
     right.append(f'<rect x="{RX + .5}" y="{top + .5}" width="{pill_w - 1:.1f}" height="33" rx="16.5" '
                  f'fill="{BLUE}" fill-opacity="0.10" stroke="{BLUE}" stroke-opacity="0.38"/>')
     right.append(f'<g transform="translate({RX + 13} {top + 9.5})" fill="none" stroke="{BLUE}" stroke-width="1.5">'
@@ -562,7 +577,6 @@ def build_about():
     right += pill_parts
 
     body = f"""{panel(w, h)}
-<rect x="{DIV}" y="32" width="1" height="{h - 64}" fill="{BORDER}"/>
 {"".join(log)}
 {"".join(right)}"""
     write("about.svg", d.svg(w, h, T(a["text"]), body))
@@ -581,21 +595,25 @@ def build_now():
     d = Doc()
     h = 38
     label, head = T(NOW["label"]), T(NOW["headline"])
-    lx = 33
-    div = lx + width(label, "s", 11, 2.4) + 12
-    w = int(div + 13 + width(head, "m", 12.5) + 18)
+    lx = 31
+    div = lx + width(label, "s", 10.5, 2.2) + 10
+    stack = NOW["stack"].replace("Kubernetes", "K8s")   # versão curta para caber na linha do topo
+    sx = div + 11 + width(head, "m", 12) + 11
+    w = int(sx + 11 + width(stack, "mono", 10.5) + 16)
     body = f"""<rect x=".5" y=".5" width="{w - 1}" height="{h - 1}" rx="{h / 2}" fill="url(#surf)" stroke="{GREEN}" stroke-opacity="0.35"/>
 <rect x="4" y="4" width="{w - 8}" height="{h - 8}" rx="{(h - 8) / 2}" fill="{GREEN}" fill-opacity="0.07"/>
-<circle cx="19" cy="19" r="3.5" fill="none" stroke="{GREEN}" stroke-width="1.3">
+<circle cx="18" cy="19" r="3.5" fill="none" stroke="{GREEN}" stroke-width="1.3">
   <animate attributeName="r" values="3.5;9" dur="2s" repeatCount="indefinite"/>
   <animate attributeName="stroke-opacity" values="0.7;0" dur="2s" repeatCount="indefinite"/>
 </circle>
-<circle cx="19" cy="19" r="3.6" fill="{GREEN}">
+<circle cx="18" cy="19" r="3.6" fill="{GREEN}">
   <animate attributeName="fill-opacity" values="1;0.55;1" dur="2s" repeatCount="indefinite"/>
 </circle>
-{d.t(lx, 23, label, 11, GREEN, "s", ls=2.4)}
+{d.t(lx, 23, label, 10.5, GREEN, "s", ls=2.2)}
 <rect x="{div:.1f}" y="11" width="1" height="16" fill="{GREEN}" fill-opacity="0.3"/>
-{d.t(div + 13, 23.5, head, 12.5, TEXT, "m")}"""
+{d.t(div + 11, 23.3, head, 12, TEXT, "m")}
+<rect x="{sx:.1f}" y="11" width="1" height="16" fill="{CHIP_BORDER}"/>
+{d.t(sx + 11, 23, stack, 10.5, BODY, "mono")}"""
     write("now.svg", d.svg(w, h, f'{label}: {T(NOW["headline"])} · {NOW["stack"]}', body))
 
 
