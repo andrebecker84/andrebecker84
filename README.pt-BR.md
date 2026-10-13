@@ -87,7 +87,7 @@
 
 <p align="center">
   <a href="https://www.linkedin.com/in/becker84"><img src="assets/pt/link-linkedin.svg" width="32%" alt="LinkedIn"></a>
-  <a href="https://andrebecker84.github.io/my-links/#contato"><img src="assets/pt/link-lock.svg" width="32%" alt="Contato"></a>
+  <a href="https://andrebecker84.github.io/my-links/#contato"><img src="assets/pt/link-contact.svg" width="32%" alt="Contato"></a>
   <a href="https://andrebecker84.github.io/my-links/"><img src="assets/pt/link-links.svg" width="32%" alt="Links"></a>
 </p>
 

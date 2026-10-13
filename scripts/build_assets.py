@@ -260,6 +260,8 @@ ICONS = {
     "folder": '<path d="M3 7a2 2 0 0 1 2-2h4.2l2 2.2H19a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/>'
               '<path d="M3 10h18" fill="none" stroke-opacity="0.6"/>',
     "linkedin": '<rect x="5" y="5" width="18" height="18" rx="4"/><path d="M10 13v6M10 9.8v.2M14 19v-6M14 15.5c0-1.5 1-2.5 2.3-2.5s2.2 1 2.2 2.5V19"/>',
+    "contact": '<rect x="4" y="6" width="20" height="16" rx="3"/><circle cx="10.5" cy="12" r="2.5"/>'
+               '<path d="M7 18.6c.6-2 1.9-3 3.5-3s2.9 1 3.5 3M16.5 11.7h4M16.5 15.7h3"/>',
     "lock": '<rect x="7" y="12.5" width="14" height="10" rx="2.5"/><path d="M10 12.5V10a4 4 0 0 1 8 0v2.5M14 16.2v2.6"/>',
     "cap": '<path d="M2 11 14 5l12 6-12 6Z"/><path d="M7 13.5V19c0 1.7 3.1 3 7 3s7-1.3 7-3v-5.5M26 11v6"/>',
     "award": '<circle cx="14" cy="10.5" r="6.5"/><path d="m10.2 15.8-2.2 8.7 6-3 6 3-2.2-8.7"/>',
@@ -677,7 +679,7 @@ def build_projects():
 # ── Contato ────────────────────────────────────────────────────────────────
 LINKS = [
     ("linkedin", BLUE, "LinkedIn", "in/becker84", "https://www.linkedin.com/in/becker84"),
-    ("lock", AMBER, {"en": "Contact", "pt": "Contato"}, {"en": "password-protected", "pt": "protegido por senha"},
+    ("contact", AMBER, {"en": "Contact", "pt": "Contato"}, {"en": "phone · e-mail · résumé", "pt": "telefone · e-mail · CV"},
      "https://andrebecker84.github.io/my-links/#contato"),
     ("links", CYAN, "Links", "andrebecker84.github.io", "https://andrebecker84.github.io/my-links/"),
 ]
@@ -687,10 +689,19 @@ def build_links():
     w, h = 300, 68
     for icon, color, label, sub, _ in LINKS:
         d = Doc()
+        locked = icon == "contact"   # seção fechada: cadeado no canto do ícone e chave no lugar da seta
         body = (panel(w, h, 14) + tile(16, 16, 36, color, ICONS[icon], r=9)
                 + d.t(66, 31, T(label), 14.5, TEXT, "s")
-                + d.t(66, 49, T(sub), 11, MUTED, "mono")
-                + arrow(w - 36, 27))
+                + d.t(66, 49, T(sub), 11, MUTED, "mono"))
+        if locked:
+            body += (f'<circle cx="50" cy="50" r="8.5" fill="{SURF_BOT}" stroke="{color}" stroke-opacity="0.5"/>'
+                     f'<g transform="translate(44.5 44.5) scale(.92)" fill="none" stroke="{color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">'
+                     '<rect x="2.4" y="5.4" width="7.2" height="5" rx="1.3"/><path d="M4.1 5.4V4a1.9 1.9 0 0 1 3.8 0v1.4"/></g>'
+                     f'<g transform="translate({w - 41} 25) scale(1.15)" fill="none" stroke="{color}" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">'
+                     '<circle cx="4.8" cy="8" r="2.9"/><path d="M7.7 8h6.6M12.1 8v2.4M14.3 8v1.7"/></g>')
+            assert 66 + width(T(sub), "mono", 11) < w - 46, f"subtítulo do contato encosta na chave ({LANG})"
+        else:
+            body += arrow(w - 36, 27)
         write(f"link-{icon}.svg", d.svg(w, h, f"{T(label)}: {T(sub)}", body))
 
 
