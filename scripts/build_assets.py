@@ -596,8 +596,8 @@ NOW = {
 }
 
 
-TOPBAR = (810, 150, 58)   # linha do topo: Agora + my-links somam 960 de largura, mesma altura
-TOPGAP = 10               # respiro entre a faixa do Agora e o bloco do my-links
+TOPBAR = (796, 164, 58)   # linha do topo: Agora + my-links somam 960 de largura, mesma altura
+TOPGAP = 24               # respiro entre a faixa do Agora e o bloco do my-links (o GitHub come parte dele)
 
 
 def build_now():

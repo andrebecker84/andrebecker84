@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <img src="assets/pt/now.svg" width="84.375%" alt="Agora: Microsserviços orientados a eventos · Java 25 · Spring Boot 4 · Kafka · Kubernetes"><a href="https://andrebecker84.github.io/my-links/"><img src="assets/pt/my-links.svg" width="15.625%" alt="my-links"></a>
+  <img src="assets/pt/now.svg" width="82.917%" alt="Agora: Microsserviços orientados a eventos · Java 25 · Spring Boot 4 · Kafka · Kubernetes"><a href="https://andrebecker84.github.io/my-links/"><img src="assets/pt/my-links.svg" width="17.083%" alt="my-links"></a>
 </p>
 
 <p align="center">
