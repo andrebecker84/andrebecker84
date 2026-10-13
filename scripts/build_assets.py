@@ -385,8 +385,13 @@ def build_hero():
     assert len(top) == len(bottom)
     assert top[0][0] > BX1 and bottom[0][0] > BX1, "diagrama largo demais"
     g = [f'<rect x="{BX1}" y="{BY - 1}" width="{BX2 - BX1}" height="2" fill="url(#bus)"/>',
-         d.t(BX1 + 4, BY + 26, "kafka", 15, MUTED, "mono")]
-    assert BX1 + 4 + width("kafka", "mono", 15) < x_start + bw / 2 - 10, "rótulo do barramento encosta no conector"
+         # ícone do Kafka (nós do cluster) + rótulo, embaixo do barramento
+         f'<g transform="translate({BX1 - 3} {BY + 13}) scale(1.05)" fill="none" stroke="{AMBER}" stroke-opacity="0.9" stroke-width="1.3" stroke-linecap="round">'
+         '<circle cx="7" cy="8" r="1.8"/><circle cx="7" cy="2.8" r="1.3"/><circle cx="7" cy="13.2" r="1.3"/>'
+         '<circle cx="12.3" cy="5.4" r="1.3"/><circle cx="12.3" cy="10.6" r="1.3"/>'
+         '<path d="M7 4.1v2.1M7 9.8v2.1M8.6 7.2l2.6-1.3M8.6 8.8l2.6 1.3"/></g>',
+         d.t(BX1 + 17, BY + 26, "kafka", 14.5, MUTED, "mono")]
+    assert BX1 + 17 + width("kafka", "mono", 14.5) < x_start + bw / 2 - 8, "rótulo do barramento encosta no conector"
     junctions = []
     for i, (x, y, bw, l, ic, color) in enumerate(top + bottom):
         cxm = x + bw / 2
@@ -583,9 +588,9 @@ PILLARS = [
 
 
 def build_pillars():
-    """Grade 3 × 2: ícone e título lado a lado, palavras-chave embaixo."""
+    """Grade 2 × 3: ícone e título lado a lado, palavras-chave embaixo."""
     d = Doc()
-    w, gap, ch, cols = 960, 16, 150, 3
+    w, gap, ch, cols = 960, 16, 150, 2
     cw = (w - gap * (cols - 1)) / cols
     rows = (len(PILLARS) + cols - 1) // cols
     h = rows * ch + (rows - 1) * gap
