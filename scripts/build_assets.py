@@ -483,18 +483,24 @@ ABOUT = {
 def build_about():
     d = Doc()
     a = ABOUT
-    w, h = 960, 286
-    RX, RW = 486, 446
+    w, h = 960, 240
+    # divisória logo depois da linha mais longa do log; o texto ocupa o resto
+    log_w = max([width("tail -f profile.events", "mono", 14)]
+                + [width(ev, "mono", 14) for _, ev, _ in a["events"]]
+                + [width(T(pl), "mono", 13) for _, _, pl in a["events"]])
+    DIV = round(50 + log_w + 44)
+    RX = DIV + 36
+    RW = w - RX - 36
     lines = wrap(T(a["text"]), "r", 16.5, RW)
     block = len(lines) * 26 + 22 + 33          # texto + respiro + selo
     y0 = (h - block) / 2 + 14                  # coluna da direita centralizada
 
     # Log de eventos: as linhas entram em sequência e o ciclo recomeça
     CYCLE = 11
-    log = [d.t(32, 56, "$", 14, GREEN, "mono"),
-           d.t(50, 56, "tail -f profile.events", 14, MUTED, "mono")]
+    log = [d.t(32, 52, "$", 14, GREEN, "mono"),
+           d.t(50, 52, "tail -f profile.events", 14, MUTED, "mono")]
     for i, (color, ev, payload) in enumerate(a["events"]):
-        y = 102 + i * 48
+        y = 90 + i * 40
         t0 = (0.8 + i * 1.1) / CYCLE
         t1 = t0 + 0.035
         kt = f"0;{t0:.3f};{t1:.3f};0.93;1"
@@ -505,7 +511,7 @@ def build_about():
                    + d.t(50, y, ev, 14, TEXT, "mono")
                    + d.t(50, y + 19, T(payload), 13, MUTED, "mono")
                    + '</g>')
-    cy = 102 + len(a["events"]) * 48 + 2
+    cy = 90 + len(a["events"]) * 40 + 2
     log.append(f'<rect x="32" y="{cy - 13}" width="8" height="16" rx="1" fill="{GREEN}">'
                '<animate attributeName="opacity" values="1;0" dur="1.05s" calcMode="discrete" repeatCount="indefinite"/></rect>')
 
@@ -525,6 +531,7 @@ def build_about():
     pill_w = x + 16 - RX
     assert RX + pill_w < w - 24, "selo de localização estoura o painel"
     assert top + 33 < h - 16, "texto do About não cabe no painel"
+    assert cy + 3 < h - 20, "log do About não cabe no painel"
     right.append(f'<rect x="{RX + .5}" y="{top + .5}" width="{pill_w - 1:.1f}" height="33" rx="16.5" '
                  f'fill="{BLUE}" fill-opacity="0.10" stroke="{BLUE}" stroke-opacity="0.38"/>')
     right.append(f'<g transform="translate({RX + 13} {top + 9.5})" fill="none" stroke="{BLUE}" stroke-width="1.5">'
@@ -532,7 +539,7 @@ def build_about():
     right += pill_parts
 
     body = f"""{panel(w, h)}
-<rect x="452" y="32" width="1" height="{h - 64}" fill="{BORDER}"/>
+<rect x="{DIV}" y="32" width="1" height="{h - 64}" fill="{BORDER}"/>
 {"".join(log)}
 {"".join(right)}"""
     write("about.svg", d.svg(w, h, T(a["text"]), body))
@@ -753,7 +760,12 @@ def build_journey():
             f'<stop offset="0.5" stop-color="{ROSE}" stop-opacity="0.65"/><stop offset="1" stop-color="{GREEN}" stop-opacity="0.75"/></linearGradient>'
             + "".join(f'<linearGradient id="b{i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{c}" stop-opacity="0.13"/>'
                       f'<stop offset="1" stop-color="{c}" stop-opacity="0.02"/></linearGradient>' for i, (c, *_) in enumerate(steps)))
-    parts = [d.t(2, 28, T(JOURNEY["hook"]), 20, TEXT, "s"),
+    hook = T(JOURNEY["hook"])
+    hw = width(hook, "i", 19)
+    parts = [  # frase como pensamento: itálico entre aspas grandes nas cores da linha do tempo
+             d.t(0, 44, "“", 48, VIOLET, "s", extra='fill-opacity="0.75"'),
+             d.t(30, 30, hook, 19, TEXT, "i"),
+             d.t(30 + hw + 6, 44, "”", 48, GREEN, "s", extra='fill-opacity="0.75"'),
              f'<line x1="0" y1="{LY}" x2="{w}" y2="{LY}" stroke="url(#tl)" stroke-width="1.6" stroke-dasharray="7 6" stroke-linecap="round"/>']
     for i, (color, icon, period, role, where) in enumerate(steps):
         x = i * (bw + gap)
@@ -879,14 +891,27 @@ THANKS = {"en": "Thanks for stopping by", "pt": "Obrigado pela visita"}
 
 
 def build_details():
-    # botão para todos os repositórios
+    # botão para todos os repositórios: olho + texto, tom azul e um brilho passando
     d = Doc()
     label = T(ALL_REPOS)
     h = 44
-    w = int(width(label, "s", 12.5, 2.2) + 86)
-    body = (f'<rect x=".5" y=".5" width="{w - 1}" height="{h - 1}" rx="{h / 2}" fill="url(#surf)" stroke="{CHIP_BORDER}"/>'
-            f'<rect x="{h / 2}" y=".5" width="{w - h}" height="1" fill="url(#hl)"/>'
-            + d.t(w / 2 - 8, 27.5, label, 12.5, LABEL, "s", ls=2.2, anchor="middle") + arrow(w - 36, 15, BLUE))
+    tw = width(label, "s", 12.5, 2.2)
+    w = int(tw + 112)
+    tx = 52                                   # texto começa depois do olho
+    body = (f'<defs><linearGradient id="bf" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="{BLUE}" stop-opacity="0.18"/>'
+            f'<stop offset="1" stop-color="{VIOLET}" stop-opacity="0.10"/></linearGradient>'
+            f'<linearGradient id="bs" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="{BLUE}" stop-opacity="0.75"/>'
+            f'<stop offset="1" stop-color="{VIOLET}" stop-opacity="0.55"/></linearGradient>'
+            '<linearGradient id="sh" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/>'
+            '<stop offset="0.5" stop-color="#fff" stop-opacity="0.16"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>'
+            f'<clipPath id="pill"><rect width="{w}" height="{h}" rx="{h / 2}"/></clipPath></defs>'
+            f'<rect x=".5" y=".5" width="{w - 1}" height="{h - 1}" rx="{h / 2}" fill="url(#surf)"/>'
+            f'<rect x=".5" y=".5" width="{w - 1}" height="{h - 1}" rx="{h / 2}" fill="url(#bf)" stroke="url(#bs)"/>'
+            f'<g clip-path="url(#pill)"><rect x="-90" y="0" width="70" height="{h}" fill="url(#sh)" transform="skewX(-20)">'
+            f'<animate attributeName="x" values="-90;{w + 40}" dur="3.2s" begin="1s" repeatCount="indefinite"/></rect></g>'
+            f'<g transform="translate(22 13) scale(1.15)" fill="none" stroke="{BLUE}" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">'
+            '<path d="M1 8s2.6-4.8 7-4.8S15 8 15 8s-2.6 4.8-7 4.8S1 8 1 8Z"/><circle cx="8" cy="8" r="2.2"/></g>'
+            + d.t(tx, 27.5, label, 12.5, TEXT, "s", ls=2.2) + arrow(w - 38, 15, BLUE))
     write("all-repos.svg", d.svg(w, h, label.capitalize(), body))
 
     # legendas da toolbox
