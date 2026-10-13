@@ -53,8 +53,16 @@ GREEN = "#34d399"
 ROSE = "#f472b6"
 LIME = "#a3e635"
 
+def mix(c, t="#e6ebf5", k=0.45):
+    """Aproxima a cor de um branco frio: mantém o matiz, tira a saturação gritante."""
+    a = [int(c[i:i + 2], 16) for i in (1, 3, 5)]
+    b = [int(t[i:i + 2], 16) for i in (1, 3, 5)]
+    return "#" + "".join(f"{round(x * (1 - k) + y * k):02x}" for x, y in zip(a, b))
+
+
 # ── Tipografia ─────────────────────────────────────────────────────────────
 FACES = {  # chave: (família, peso, itálico, arquivo)
+    "l": ("P", 300, False, "Poppins-Light.ttf"),
     "r": ("P", 400, False, "Poppins-Regular.ttf"),
     "m": ("P", 500, False, "Poppins-Medium.ttf"),
     "s": ("P", 600, False, "Poppins-SemiBold.ttf"),
@@ -145,10 +153,10 @@ class Doc:
 """
 
 
-def panel(w, h, r=16, x=0, y=0, tint=None, horizontal=False, strength=0.10):
+def panel(w, h, r=16, x=0, y=0, tint=None, horizontal=False, strength=0.10, edge=0.26):
     """Superfície plana, borda fina e um brilho sutil na aresta superior.
     Com `tint`, ganha um véu suave da cor (de cima para baixo, ou da esquerda) e a borda levemente tingida."""
-    stroke = f'stroke="{tint}" stroke-opacity="0.26"' if tint else f'stroke="{BORDER}"'
+    stroke = f'stroke="{tint}" stroke-opacity="{edge}"' if tint and edge else f'stroke="{BORDER}"'
     out = f'<rect x="{x + .5}" y="{y + .5}" width="{w - 1}" height="{h - 1}" rx="{r}" fill="url(#surf)" {stroke}/>'
     if tint:
         gid = f"t{tint[1:]}{'h' if horizontal else 'v'}"
@@ -506,7 +514,7 @@ def build_about():
     DIV = round(50 + log_w + 44)
     RX = DIV + 36
     RW = w - RX - 36
-    lines = wrap(T(a["text"]), "r", 16.5, RW)
+    lines = wrap(T(a["text"]), "l", 16.5, RW)
     block = len(lines) * 26 + 22 + 33          # texto + respiro + selo
     y0 = (h - block) / 2 + 14                  # coluna da direita centralizada
 
@@ -530,7 +538,7 @@ def build_about():
     log.append(f'<rect x="32" y="{cy - 13}" width="8" height="16" rx="1" fill="{GREEN}">'
                '<animate attributeName="opacity" values="1;0" dur="1.05s" calcMode="discrete" repeatCount="indefinite"/></rect>')
 
-    right = [d.t(RX, y0 + i * 26, ln, 16.5, BODY, "r") for i, ln in enumerate(lines)]
+    right = [d.t(RX, y0 + i * 26, ln, 16.5, BODY, "l") for i, ln in enumerate(lines)]
     # selo de localização e modalidades, em pílula com tom azul
     top = y0 + (len(lines) - 1) * 26 + 22
     colors = {"text": TEXT, "pref": BLUE, "alt": MUTED}
@@ -621,7 +629,7 @@ def build_pillars():
         x, y = (i % cols) * (cw + gap), (i // cols) * (ch + gap)
         kw = "".join(d.t(20, 102 + j * 21, T(k), 12.5, BODY, "mono") for j, k in enumerate(kws))
         parts.append(f"""<g transform="translate({x:.1f} {y})">
-  {panel(cw, ch, 14, tint=color, strength=0.09)}
+  {panel(cw, ch, 14, tint=color, strength=0.035, edge=0)}
   {tile(20, 20, 42, color, ICONS[icon])}
   {d.t(76, 47.5, T(title), 17, TEXT, "s")}
   <rect x="20" y="77" width="22" height="2" rx="1" fill="{color}"/>
@@ -676,35 +684,56 @@ PROJECTS = [
 ]
 
 
+SHOTS = ROOT / "shots"   # miniaturas dos projetos (560 × 336, JPEG), uma por slug, quando houver
+
+
 def build_projects():
-    """Um cartão por linha, na largura total: categoria, título com os chips à direita e a descrição."""
+    """Um cartão por linha: categoria, título, descrição e chips; screenshot à direita quando o projeto tiver."""
     w = 960
-    nmax = max(len(wrap(T(p["desc"]), "r", 14.5, w - 64)) for p in PROJECTS)
-    h = round(102 + (nmax - 1) * 22 + 28)
+    TW, TH = 280, 168                     # miniatura
+    shot_x = w - 18 - TW
+    text_r = {True: shot_x - 30, False: w - 30}   # limite direito do texto, com e sem miniatura
+
+    def has_shot(p):
+        return (SHOTS / f"{p['slug']}.jpg").exists()
+
+    def desc_lines(p):
+        return wrap(T(p["desc"]), "r", 14.5, text_r[has_shot(p)] - 30)
+
+    nmax = max(len(desc_lines(p)) for p in PROJECTS)
+    h = max(TH + 36, round(102 + (nmax - 1) * 22 + 18 + 28 + 22))
     for p in PROJECTS:
         d = Doc()
-        lines = wrap(T(p["desc"]), "r", 14.5, w - 64)
+        shot = has_shot(p)
+        right = text_r[shot]
         title = T(p["title"])
         body = [panel(w, h),
                 f'<circle cx="35" cy="35" r="3.5" fill="{p["color"]}"/>',
                 d.t(48, 39.5, T(p["tag"]), 12, LABEL, "s", ls=1.8),
-                arrow(w - 46, 24),
+                arrow(right - 16, 24),
                 f'<g transform="translate(28 53) scale(.92)" fill="{p["color"]}" fill-opacity="0.14" stroke="{p["color"]}" '
                 f'stroke-width="1.45" stroke-linejoin="round">{ICONS["folder"]}</g>',
                 d.t(58, 72.5, title, 18, TEXT, "s")]
-        # chips alinhados à direita, na linha do título
-        cws = [width(c, "m", 12.5) + 26 for c in p["chips"]]
-        cx = w - 30 - (sum(cws) + 8 * (len(cws) - 1))
-        assert 58 + width(title, "s", 18) + 24 < cx, f"chips encostam no título: {title}"
-        for c, cw in zip(p["chips"], cws):
-            body.append(f'<rect x="{cx + .5:.1f}" y="51.5" width="{cw - 1:.1f}" height="28" rx="14" fill="#fff" fill-opacity="0.035" stroke="{CHIP_BORDER}"/>')
-            body.append(d.t(cx + cw / 2, 70, c, 12.5, LABEL, "m", anchor="middle"))
-            cx += cw + 8
+        assert 58 + width(title, "s", 18) < right, f"título longo demais: {title}"
         y = 102
-        for ln in lines:
+        for ln in desc_lines(p):
             body.append(d.t(30, y, ln, 14.5, DESC, "r"))
             y += 22
-        assert y - 22 < h - 20, (p["slug"], LANG, y)
+        # chips embaixo da descrição
+        cy, cx = y - 22 + 18, 30
+        for c in p["chips"]:
+            cw = width(c, "m", 12.5) + 26
+            body.append(f'<rect x="{cx + .5:.1f}" y="{cy + .5}" width="{cw - 1:.1f}" height="28" rx="14" fill="#fff" fill-opacity="0.035" stroke="{CHIP_BORDER}"/>')
+            body.append(d.t(cx + cw / 2, cy + 18.5, c, 12.5, LABEL, "m", anchor="middle"))
+            cx += cw + 8
+        assert cx - 8 < right and cy + 28 < h - 14, (p["slug"], LANG, cx, cy)
+        if shot:  # miniatura com cantos arredondados e borda na cor do projeto
+            b64 = base64.b64encode((SHOTS / f"{p['slug']}.jpg").read_bytes()).decode()
+            ty = (h - TH) / 2
+            body += [f'<clipPath id="th"><rect x="{shot_x}" y="{ty}" width="{TW}" height="{TH}" rx="10"/></clipPath>',
+                     f'<image x="{shot_x}" y="{ty}" width="{TW}" height="{TH}" preserveAspectRatio="xMidYMid slice" clip-path="url(#th)" '
+                     f'href="data:image/jpeg;base64,{b64}"/>',
+                     f'<rect x="{shot_x + .5}" y="{ty + .5}" width="{TW - 1}" height="{TH - 1}" rx="10" fill="none" stroke="{p["color"]}" stroke-opacity="0.35"/>']
         write(f"project-{p['slug']}.svg", d.svg(w, h, f'{title}: {T(p["desc"])}', "\n".join(body)))
 
 
@@ -771,18 +800,18 @@ def build_journey():
     bh = 104
     h = int(top + bh + 2)
     steps = JOURNEY["steps"]
-    defs = (f'<linearGradient id="tl" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="{w}" y2="0"><stop offset="0" stop-color="{VIOLET}" stop-opacity="0.65"/>'
-            f'<stop offset="0.5" stop-color="{ROSE}" stop-opacity="0.65"/><stop offset="1" stop-color="{GREEN}" stop-opacity="0.75"/></linearGradient>'
-            + "".join(f'<linearGradient id="b{i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{c}" stop-opacity="0.13"/>'
+    defs = (f'<linearGradient id="tl" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="{w}" y2="0"><stop offset="0" stop-color="{VIOLET}" stop-opacity="0.38"/>'
+            f'<stop offset="0.5" stop-color="{ROSE}" stop-opacity="0.38"/><stop offset="1" stop-color="{GREEN}" stop-opacity="0.5"/></linearGradient>'
+            + "".join(f'<linearGradient id="b{i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{c}" stop-opacity="0.05"/>'
                       f'<stop offset="1" stop-color="{c}" stop-opacity="0.02"/></linearGradient>' for i, (c, *_) in enumerate(steps)))
     hook = T(JOURNEY["hook"])
     hw = width(hook, "i", 19)
     parts = [  # frase como pensamento: itálico entre aspas grandes nas cores da linha do tempo
-             d.t(0, 44, "“", 48, VIOLET, "s", extra='fill-opacity="0.75"'),
+             d.t(0, 44, "“", 48, VIOLET, "s", extra='fill-opacity="0.5"'),
              f'<defs><linearGradient id="hk" gradientUnits="userSpaceOnUse" x1="30" y1="0" x2="{30 + hw:.0f}" y2="0">'
-             f'<stop offset="0" stop-color="{VIOLET}"/><stop offset="0.5" stop-color="{ROSE}"/><stop offset="1" stop-color="{GREEN}"/></linearGradient></defs>',
+             f'<stop offset="0" stop-color="{mix(VIOLET)}"/><stop offset="0.5" stop-color="{mix(ROSE)}"/><stop offset="1" stop-color="{mix(GREEN)}"/></linearGradient></defs>',
              d.t(30, 30, hook, 19, "url(#hk)", "i"),
-             d.t(30 + hw + 6, 44, "”", 48, GREEN, "s", extra='fill-opacity="0.75"'),
+             d.t(30 + hw + 6, 44, "”", 48, GREEN, "s", extra='fill-opacity="0.5"'),
              f'<line x1="0" y1="{LY}" x2="{w}" y2="{LY}" stroke="url(#tl)" stroke-width="1.6" stroke-dasharray="7 6" stroke-linecap="round"/>']
     for i, (color, icon, period, role, where) in enumerate(steps):
         x = i * (bw + gap)
@@ -797,7 +826,7 @@ def build_journey():
         parts.append(tile(ix, ty, T_, color, ICONS[icon], r=12))
         path = bubble(x + .5, top, bw - 1, bh - 1, 14, icx)
         parts += [f'<path d="{path}" fill="url(#surf)"/>',
-                  f'<path d="{path}" fill="url(#b{i})" stroke="{color}" stroke-opacity="0.38"/>',
+                  f'<path d="{path}" fill="url(#b{i})" stroke="{CHIP_BORDER}"/>',
                   cal(x + 22, top + 30, color, 13),
                   d.t(x + 41, top + 30, T(period), 13, color, "mono"),
                   d.t(x + 22, top + 58, T(role), 17.5, TEXT, "s"),
@@ -808,7 +837,8 @@ def build_journey():
     write_themed("journey.svg",
                  d.svg(w, h, T(JOURNEY["hook"]) + " " + " → ".join(T(s[3]) for s in steps), "\n".join(parts), defs),
                  light_map={PAGE: "#ffffff", SURF_TOP: "#f6f8fa", SURF_BOT: "#ffffff",
-                            VIOLET: "#8250df", ROSE: "#bf3989", GREEN: "#1a7f37"})   # tons do Primer, legíveis no branco
+                            VIOLET: "#8250df", ROSE: "#bf3989", GREEN: "#1a7f37",
+                            mix(VIOLET): "#8250df", mix(ROSE): "#bf3989", mix(GREEN): "#1a7f37"})   # tons do Primer, legíveis no branco
 
 
 # ── Formação, certificações e idiomas ──────────────────────────────────────
@@ -841,7 +871,7 @@ def build_education():
     parts = []
     for i, (icon, color, title, items) in enumerate(EDUCATION):
         x = i * (cw + gap)
-        g = [panel(cw, h, 14, tint=color, strength=0.07), tile(20, 20, 40, color, ICONS[icon]),
+        g = [panel(cw, h, 14, tint=color, strength=0.03, edge=0), tile(20, 20, 40, color, ICONS[icon]),
              d.t(74, 46.5, T(title), 17, TEXT, "s")]
         y = 98
         if icon == "cap":  # título + linha de apoio
