@@ -21,13 +21,13 @@
 <g transform="translate(436 27)" fill="none" stroke="#6b7896" stroke-width="1.5" stroke-linecap="round"><path d="M3 11 11 3M5 3h6v6"/></g>
 <g transform="translate(23 53) scale(1.1)" fill="#60a5fa" fill-opacity="0.14" stroke="#60a5fa" stroke-width="1.45" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4.2l2 2.2H19a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M3 10h18" fill="none" stroke-opacity="0.6"/></g>
 <text x="57.0" y="76.0" font-family="P, 'Segoe UI', -apple-system, sans-serif" font-size="21" font-weight="600" fill="#f1f4f9" >API de Vendas · JWT</text>
-<text x="26.0" y="106.0" font-family="P, 'Segoe UI', -apple-system, sans-serif" font-size="13.5" font-weight="400" fill="#aab6cb" >Serviço de autenticação com login e refresh token rotativo,</text>
-<text x="26.0" y="126.5" font-family="P, 'Segoe UI', -apple-system, sans-serif" font-size="13.5" font-weight="400" fill="#aab6cb" >rotas protegidas no gateway e nos serviços. Stack reativa</text>
-<text x="26.0" y="147.0" font-family="P, 'Segoe UI', -apple-system, sans-serif" font-size="13.5" font-weight="400" fill="#aab6cb" >com WebFlux e R2DBC.</text>
+<text x="26.0" y="106.0" font-family="P, 'Segoe UI', -apple-system, sans-serif" font-size="13.5" font-weight="400" fill="#9ca9bf" >Serviço de autenticação com login e refresh token rotativo,</text>
+<text x="26.0" y="126.5" font-family="P, 'Segoe UI', -apple-system, sans-serif" font-size="13.5" font-weight="400" fill="#9ca9bf" >rotas protegidas no gateway e nos serviços. Stack reativa</text>
+<text x="26.0" y="147.0" font-family="P, 'Segoe UI', -apple-system, sans-serif" font-size="13.5" font-weight="400" fill="#9ca9bf" >com WebFlux e R2DBC.</text>
 <rect x="26.5" y="181.5" width="98.0" height="25" rx="12.5" fill="#fff" fill-opacity="0.035" stroke="#26324c"/>
-<text x="75.5" y="198.0" font-family="P, 'Segoe UI', -apple-system, sans-serif" font-size="11" font-weight="500" text-anchor="middle" fill="#aab6cb" >Spring Cloud</text>
+<text x="75.5" y="198.0" font-family="P, 'Segoe UI', -apple-system, sans-serif" font-size="11" font-weight="500" text-anchor="middle" fill="#8a97b2" >Spring Cloud</text>
 <rect x="133.5" y="181.5" width="70.0" height="25" rx="12.5" fill="#fff" fill-opacity="0.035" stroke="#26324c"/>
-<text x="168.5" y="198.0" font-family="P, 'Segoe UI', -apple-system, sans-serif" font-size="11" font-weight="500" text-anchor="middle" fill="#aab6cb" >WebFlux</text>
+<text x="168.5" y="198.0" font-family="P, 'Segoe UI', -apple-system, sans-serif" font-size="11" font-weight="500" text-anchor="middle" fill="#8a97b2" >WebFlux</text>
 <rect x="212.5" y="181.5" width="90.0" height="25" rx="12.5" fill="#fff" fill-opacity="0.035" stroke="#26324c"/>
-<text x="257.5" y="198.0" font-family="P, 'Segoe UI', -apple-system, sans-serif" font-size="11" font-weight="500" text-anchor="middle" fill="#aab6cb" >PostgreSQL</text>
+<text x="257.5" y="198.0" font-family="P, 'Segoe UI', -apple-system, sans-serif" font-size="11" font-weight="500" text-anchor="middle" fill="#8a97b2" >PostgreSQL</text>
 </svg>

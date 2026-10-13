@@ -43,6 +43,7 @@ TEXT = "#f1f4f9"
 BODY = "#aab6cb"
 MUTED = "#6b7896"
 LABEL = "#8a97b2"
+DESC = "#9ca9bf"   # descrição dos projetos: abaixo do BODY, ainda AAA (7.1:1) sobre o cartão
 
 BLUE = "#60a5fa"
 AMBER = "#f5b14c"
@@ -661,14 +662,14 @@ def build_projects():
                 d.t(57, 76, T(p["title"]), 21, TEXT, "s")]
         assert 57 + width(T(p["title"]), "s", 21) < w - 26, f"título longo demais: {T(p['title'])}"
         for ln in lines:
-            body.append(d.t(26, y, ln, 13.5, BODY, "r"))
+            body.append(d.t(26, y, ln, 13.5, DESC, "r"))
             y += 20.5
         assert y - 20.5 < h - 56, (p["slug"], LANG, y)   # última linha acima dos chips
         cx = 26
         for c in p["chips"]:
             cw = width(c, "m", 11) + 24
             body.append(f'<rect x="{cx + .5}" y="{h - 46.5}" width="{cw - 1:.1f}" height="25" rx="12.5" fill="#fff" fill-opacity="0.035" stroke="{CHIP_BORDER}"/>')
-            body.append(d.t(cx + cw / 2, h - 30, c, 11, BODY, "m", anchor="middle"))
+            body.append(d.t(cx + cw / 2, h - 30, c, 11, LABEL, "m", anchor="middle"))
             cx += cw + 8
         write(f"project-{p['slug']}.svg", d.svg(w, h, f'{T(p["title"])}: {T(p["desc"])}', "\n".join(body)))
 
@@ -796,15 +797,19 @@ def build_education():
                 level = T(level)
                 bw = width(level, "m", 10.5) + 18
                 bx = cw - 20 - bw
-                g += [flag(20, y, code), d.t(46, y, T(name), 12.5, BODY, "r"),
-                      f'<rect x="{bx + .5:.1f}" y="{y - 14.5}" width="{bw - 1:.1f}" height="20" rx="10" fill="{lc}" fill-opacity="0.12" stroke="{lc}" stroke-opacity="0.42"/>',
-                      d.t(bx + bw / 2, y - .5, level, 10.5, lc, "m", anchor="middle")]
-                if note:  # meta: "→ C1", seta clara e nível na cor do badge
+                g += [flag(20, y, code), d.t(46, y, T(name), 12.5, BODY, "r")]
+                if note:  # meta: B2 → C1, o C1 em selo tracejado
                     note = T(note)
-                    nx = bx - 9 - width(note, "m", 11)
-                    g += [d.t(bx - 9, y - .5, note, 11, lc, "m", anchor="end"),
-                          d.t(nx - 5, y - .5, "→", 11, BODY, "m", anchor="end")]
-                    assert 46 + width(T(name), "r", 12.5) + 12 < nx - 5 - width("→", "m", 11), "nota do idioma encosta no nome"
+                    nw = width(note, "m", 10.5) + 18
+                    nx = cw - 20 - nw
+                    ax = nx - 8 - 12
+                    g += [f'<rect x="{nx + .5:.1f}" y="{y - 14.5}" width="{nw - 1:.1f}" height="20" rx="10" fill="none" stroke="{lc}" stroke-opacity="0.6" stroke-dasharray="3 2.5"/>',
+                          d.t(nx + nw / 2, y - .5, note, 10.5, lc, "m", anchor="middle"),
+                          f'<path d="M{ax:.1f} {y - 4.5}h12m-3.6-3.6 3.6 3.6-3.6 3.6" fill="none" stroke="{BODY}" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>']
+                    bx = ax - 8 - bw
+                g += [f'<rect x="{bx + .5:.1f}" y="{y - 14.5}" width="{bw - 1:.1f}" height="20" rx="10" fill="{lc}" fill-opacity="0.12" stroke="{lc}" stroke-opacity="0.42"/>',
+                      d.t(bx + bw / 2, y - .5, level, 10.5, lc, "m", anchor="middle")]
+                assert 46 + width(T(name), "r", 12.5) + 12 < bx, "nível do idioma encosta no nome"
                 y += 30
         else:  # lista com o ano à direita
             for name, year in items:

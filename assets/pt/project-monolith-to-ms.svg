@@ -21,13 +21,13 @@
 <g transform="translate(436 27)" fill="none" stroke="#6b7896" stroke-width="1.5" stroke-linecap="round"><path d="M3 11 11 3M5 3h6v6"/></g>
 <g transform="translate(23 53) scale(1.1)" fill="#c084fc" fill-opacity="0.14" stroke="#c084fc" stroke-width="1.45" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4.2l2 2.2H19a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M3 10h18" fill="none" stroke-opacity="0.6"/></g>
 <text x="57.0" y="76.0" font-family="P, 'Segoe UI', -apple-system, sans-serif" font-size="21" font-weight="600" fill="#f1f4f9" >Do Monólito aos Microsserviços</text>
-<text x="26.0" y="106.0" font-family="P, 'Segoe UI', -apple-system, sans-serif" font-size="13.5" font-weight="400" fill="#aab6cb" >Extração do contexto de Pagamento de um monólito de</text>
-<text x="26.0" y="126.5" font-family="P, 'Segoe UI', -apple-system, sans-serif" font-size="13.5" font-weight="400" fill="#aab6cb" >e-commerce em produção, com DDD e Branch by</text>
-<text x="26.0" y="147.0" font-family="P, 'Segoe UI', -apple-system, sans-serif" font-size="13.5" font-weight="400" fill="#aab6cb" >Abstraction.</text>
+<text x="26.0" y="106.0" font-family="P, 'Segoe UI', -apple-system, sans-serif" font-size="13.5" font-weight="400" fill="#9ca9bf" >Extração do contexto de Pagamento de um monólito de</text>
+<text x="26.0" y="126.5" font-family="P, 'Segoe UI', -apple-system, sans-serif" font-size="13.5" font-weight="400" fill="#9ca9bf" >e-commerce em produção, com DDD e Branch by</text>
+<text x="26.0" y="147.0" font-family="P, 'Segoe UI', -apple-system, sans-serif" font-size="13.5" font-weight="400" fill="#9ca9bf" >Abstraction.</text>
 <rect x="26.5" y="181.5" width="47.0" height="25" rx="12.5" fill="#fff" fill-opacity="0.035" stroke="#26324c"/>
-<text x="50.0" y="198.0" font-family="P, 'Segoe UI', -apple-system, sans-serif" font-size="11" font-weight="500" text-anchor="middle" fill="#aab6cb" >DDD</text>
+<text x="50.0" y="198.0" font-family="P, 'Segoe UI', -apple-system, sans-serif" font-size="11" font-weight="500" text-anchor="middle" fill="#8a97b2" >DDD</text>
 <rect x="82.5" y="181.5" width="122.0" height="25" rx="12.5" fill="#fff" fill-opacity="0.035" stroke="#26324c"/>
-<text x="143.5" y="198.0" font-family="P, 'Segoe UI', -apple-system, sans-serif" font-size="11" font-weight="500" text-anchor="middle" fill="#aab6cb" >Ports &amp; Adapters</text>
+<text x="143.5" y="198.0" font-family="P, 'Segoe UI', -apple-system, sans-serif" font-size="11" font-weight="500" text-anchor="middle" fill="#8a97b2" >Ports &amp; Adapters</text>
 <rect x="213.5" y="181.5" width="96.0" height="25" rx="12.5" fill="#fff" fill-opacity="0.035" stroke="#26324c"/>
-<text x="261.5" y="198.0" font-family="P, 'Segoe UI', -apple-system, sans-serif" font-size="11" font-weight="500" text-anchor="middle" fill="#aab6cb" >Strangler Fig</text>
+<text x="261.5" y="198.0" font-family="P, 'Segoe UI', -apple-system, sans-serif" font-size="11" font-weight="500" text-anchor="middle" fill="#8a97b2" >Strangler Fig</text>
 </svg>
