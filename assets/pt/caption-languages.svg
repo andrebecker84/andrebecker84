@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="22" viewBox="0 0 620 22" role="img" aria-label="Linguagens e frameworks">
+<title>Linguagens e frameworks</title>
+<style>@font-face{font-family:P;font-weight:600;font-style:normal;src:url(data:font/woff;base64,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) format('woff');}</style>
+<defs>
+  <linearGradient id="surf" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#0f1729"/><stop offset="1" stop-color="#0a101d"/>
+  </linearGradient>
+  <linearGradient id="hl" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+    <stop offset="0.5" stop-color="#fff" stop-opacity="0.09"/>
+    <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="rule" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#1c2740"/><stop offset="1" stop-color="#1c2740" stop-opacity="0"/>
+  </linearGradient>
+  
+</defs>
+<text x="310.0" y="15.0" font-family="P, 'Segoe UI', -apple-system, sans-serif" font-size="10.5" font-weight="600" letter-spacing="2.6" text-anchor="middle" fill="#8a97b2" >LINGUAGENS E FRAMEWORKS</text>
+</svg>

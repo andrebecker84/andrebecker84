@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="22" viewBox="0 0 620 22" role="img" aria-label="Mensageria e dados">
+<title>Mensageria e dados</title>
+<style>@font-face{font-family:P;font-weight:600;font-style:normal;src:url(data:font/woff;base64,d09GRgABAAAAAAVYAAwAAAAABZAABAEGAAAAAAAAAAAAAAAAAAAAAAAAAABHUE9TAAAFCAAAACAAAAAgRHZMdUdTVUIAAAUoAAAAMAAAADAfSCdrT1MvMgAABFAAAABPAAAAYFpBX1NjbWFwAAAEoAAAAEwAAABkAQUBoGdseWYAAAEcAAACbgAAAsBLX+I7aGVhZAAAA8gAAAA2AAAANhqEJG5oaGVhAAAEMAAAACAAAAAkDDABo2htdHgAAAQAAAAAMAAAADAc+gIxbG9jYQAAA6wAAAAaAAAAGgPIAuRtYXhwAAADjAAAAB0AAAAgACIBB25hbWUAAATsAAAABgAAAAYABgAAcG9zdAAABPQAAAAUAAAAIP+4ADJ4nE2RT0gUcRTH3+9N7KDF6jQ7uxGRjT+dtTR1Z9zZGcndlHVJKjRQD+2qq6brav7BMMzqEkiXuUR/DgshNMLSoTp4aqZOSnevUdYliKQwsIPJjjGuRYcHD96/7+d9AeE4AK6gDSyUAlSLLOUVngYZhvx0vtU/3DV3H3WPjCwuol1o/0WqnA8ACO0A+BwtKAUeAPx+wefxUMopR9Vwk+QmJJ9PJvNT29vZ+fmp4WG0epey2ae9aBXezk9O3nYUAOJuIe/RhsMAvKAIVBAFkROF9c1NUuJMkMfY8Wr69Szas0CA7v3Gj7gKIgCRJFrp8Qg+v1+R1QgNi4IXaaUkhZtUVZH9Aaw91q1F02pkqLVrtHyLLHhTD66OmH195rWbL0Xyta5eG4snxrSeSxMLHXcuJp9lMmbyxlhREayjBQwAz1Fu3UCrkECrWGGiaMERAMJRjqEMRzmF55moYY+/MZY2NtxW8s5pdgOtwg6yB4yYQxtKAETqTiqEUzBnOKuGQVoM8skR0XZOkc+AQPd28AeuQRlUABz6x1P8bhTDTf+Bk+ByOr08NGwODCwPxdKqmo7FBlV1MMamzMyomUqZoxkzdVcfTySympZNJMb1A9860QIvBABEhnKUE4sHWJ4octE98iLXZhDPlVm9qzPv3JvTNU2fI+XOFlr64Ln2acH5Qm5FQo1hl0/Z28GzuAZ1AH5JCir7nrhKg/X41w+6r9uVHTiJ+zDf5+LkCRNpDGmSLsd7WqIzF67fZ3OoN5wOVUfkeG+0eeYyK/efr5UbpIqagNcX7GyLpkLZ/qqGMzUnqgNlvpquVi2t/wHJDLc6AAB4nGNgZGBg4GGYwMDDUMLAxgDiIQAzAxMAGrkBKgAAAAAAAAAAAAAaAD0AUwCGAJMArwDFAPYBHwFgAAAAAQAAAAQBBnN9CwJfDzz1AAMD6AAAAADYpKnFAAAAANsWNs394f2vCc4EQwAAAAcAAgAAAAAAAAH0AAAA7gAAAswAGgLNAEUCFABFAwAAIwEWAEUDgwBFAt8ARQMRACMCgQBFAmEAM3icY2BkYGCR+reIIYVzz9+HPy04zzEwMqACHgCn5QbceJxjYGFOYopgYGVgYOpiimBgYPCG0IxxDEaMPgwMDAzsIAICGBFMBgbPEDd/hgMMCgzBLFL/FjGksOQzFcPUMGkx7WVgYFBgYAEAzlwKRQB4nFXMQQpAYBRF4cNvAQYWYCuKZCBis1LIUqzkqJeJOzn1DS6QAwmoSGTRghkoKcNrGjp6BiZW/aQNGVnUx9vL08PdLT5+ewHNYRSZAAAAAAAGAAB4nGNgZgCD/1sZjCAsVAAALMIB6gABAAAACgAcAB4AAURGTFQACAAEAAAAAP//AAAAAAAAAAEAAAAKACwALgADREZMVAAUZGV2MgAeZGV2YQAeAAQAAAAA//8AAAAAAAAAAAAA) format('woff');}</style>
+<defs>
+  <linearGradient id="surf" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#0f1729"/><stop offset="1" stop-color="#0a101d"/>
+  </linearGradient>
+  <linearGradient id="hl" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+    <stop offset="0.5" stop-color="#fff" stop-opacity="0.09"/>
+    <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="rule" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#1c2740"/><stop offset="1" stop-color="#1c2740" stop-opacity="0"/>
+  </linearGradient>
+  
+</defs>
+<text x="310.0" y="15.0" font-family="P, 'Segoe UI', -apple-system, sans-serif" font-size="10.5" font-weight="600" letter-spacing="2.6" text-anchor="middle" fill="#8a97b2" >MENSAGERIA E DADOS</text>
+</svg>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="22" viewBox="0 0 620 22" role="img" aria-label="Plataforma e observabilidade">
+<title>Plataforma e observabilidade</title>
+<style>@font-face{font-family:P;font-weight:600;font-style:normal;src:url(data:font/woff;base64,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) format('woff');}</style>
+<defs>
+  <linearGradient id="surf" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#0f1729"/><stop offset="1" stop-color="#0a101d"/>
+  </linearGradient>
+  <linearGradient id="hl" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+    <stop offset="0.5" stop-color="#fff" stop-opacity="0.09"/>
+    <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="rule" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#1c2740"/><stop offset="1" stop-color="#1c2740" stop-opacity="0"/>
+  </linearGradient>
+  
+</defs>
+<text x="310.0" y="15.0" font-family="P, 'Segoe UI', -apple-system, sans-serif" font-size="10.5" font-weight="600" letter-spacing="2.6" text-anchor="middle" fill="#8a97b2" >PLATAFORMA E OBSERVABILIDADE</text>
+</svg>

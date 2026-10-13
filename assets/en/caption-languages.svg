@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="22" viewBox="0 0 620 22" role="img" aria-label="Languages &amp; frameworks">
+<title>Languages &amp; frameworks</title>
+<style>@font-face{font-family:P;font-weight:600;font-style:normal;src:url(data:font/woff;base64,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) format('woff');}</style>
+<defs>
+  <linearGradient id="surf" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#0f1729"/><stop offset="1" stop-color="#0a101d"/>
+  </linearGradient>
+  <linearGradient id="hl" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+    <stop offset="0.5" stop-color="#fff" stop-opacity="0.09"/>
+    <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="rule" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#1c2740"/><stop offset="1" stop-color="#1c2740" stop-opacity="0"/>
+  </linearGradient>
+  
+</defs>
+<text x="310.0" y="15.0" font-family="P, 'Segoe UI', -apple-system, sans-serif" font-size="10.5" font-weight="600" letter-spacing="2.6" text-anchor="middle" fill="#8a97b2" >LANGUAGES &amp; FRAMEWORKS</text>
+</svg>
