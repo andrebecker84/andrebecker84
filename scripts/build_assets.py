@@ -815,7 +815,7 @@ def build_journey():
              f'<line x1="0" y1="{LY}" x2="{w}" y2="{LY}" stroke="url(#tl)" stroke-width="1.6" stroke-dasharray="7 6" stroke-linecap="round"/>']
     for i, (color, icon, period, role, where) in enumerate(steps):
         x = i * (bw + gap)
-        ix = x + 22                           # ícone alinhado à esquerda do balão
+        ix = x + bw / 2 - T_ / 2              # ícone centralizado sobre o balão
         icx = ix + T_ / 2
         ty = LY - T_ / 2
         parts.append(f'<rect x="{ix - 6:.1f}" y="{ty - 6}" width="{T_ + 12}" height="{T_ + 12}" rx="15" fill="{PAGE}"/>')
