@@ -1,6 +1,7 @@
 <!-- Gerado por scripts/build_assets.py — edite os textos lá e rode: python scripts/build_assets.py -->
 
 <p align="right">
+  <img src="assets/pt/now.svg" height="34" alt="Agora: Microsserviços orientados a eventos · Java 25 · Spring Boot 4 · Kafka · Kubernetes">
   <a href="https://andrebecker84.github.io/my-links/"><img src="assets/pt/my-links.svg" height="34" alt="my-links"></a>
   <a href="https://github.com/andrebecker84"><img src="assets/pt/lang.svg" height="34" alt="English"></a>
 </p>
@@ -15,10 +16,6 @@
 
 <p align="center">
   <img src="assets/pt/about.svg" width="100%" alt="Projeto e construo sistemas backend que escalam: serviços distribuídos e orientados a eventos em Java e Spring, entregues no Kubernetes com observabilidade desde o primeiro dia. Recentemente explorando agentes de IA e machine learning.">
-</p>
-
-<p align="center">
-  <img src="assets/pt/now.svg" width="100%" alt="Agora: Microsserviços orientados a eventos · Java 25 · Spring Boot 4 · Kafka · Kubernetes">
 </p>
 
 <p align="center">
