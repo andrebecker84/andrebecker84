@@ -41,13 +41,13 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/andrebecker84/cinepass-ddd-event-driven-AT"><img src="assets/en/project-cinepass.svg" width="49%" alt="CinePass: Kafka in KRaft mode with transactional outbox, idempotent consumers, per-booking ordering and DLT replay. Logs in ELK, traces in Zipkin."></a>
-  <a href="https://github.com/andrebecker84/TP5-PB_producao"><img src="assets/en/project-infnet-hub-prod.svg" width="49%" alt="Infnet Hub · Production: Spring Boot microservices running on Kubernetes with full observability (Prometheus, Grafana, Loki, Tempo) and CI/CD."></a>
-  <a href="https://github.com/andrebecker84/TP4-PB_eventos"><img src="assets/en/project-infnet-hub-events.svg" width="49%" alt="Infnet Hub · Events: Refactored to event-driven with RabbitMQ: outbox, quorum queues, DLQ, saga and request/reply, secured by a Keycloak BFF."></a>
-  <a href="https://github.com/andrebecker84/ecommerce-ddd-async-messaging-TP3"><img src="assets/en/project-async-messaging.svg" width="49%" alt="E-commerce · Async Messaging: Commands over RabbitMQ, events over Kafka, mirrored to SNS/SQS FIFO. Transactional outbox and inbox with an orchestrated saga."></a>
-  <a href="https://github.com/andrebecker84/microservices-devops-api-vendas-TP3"><img src="assets/en/project-jwt-auth.svg" width="49%" alt="Sales API · JWT Auth: Auth service with login and rotating refresh tokens, protected routes at the gateway and services. Reactive stack with WebFlux and R2DBC."></a>
-  <a href="https://github.com/andrebecker84/ecommerce-ddd-refactoring-TP1"><img src="assets/en/project-monolith-to-ms.svg" width="49%" alt="From Monolith to Microservices: Extracting the Payments bounded context from a live e-commerce monolith using DDD and Branch by Abstraction."></a>
-  <a href="https://github.com/andrebecker84/ml-portfolio"><img src="assets/en/project-ml-portfolio.svg" width="49%" alt="Machine Learning Portfolio: Notebooks covering classification, clustering, feature engineering and NLP, with model interpretability through SHAP."></a>
+  <a href="https://github.com/andrebecker84/cinepass-ddd-event-driven-AT"><img src="assets/en/project-cinepass.svg" width="100%" alt="CinePass: Kafka in KRaft mode with transactional outbox, idempotent consumers, per-booking ordering and DLT replay. Logs in ELK, traces in Zipkin."></a>
+  <a href="https://github.com/andrebecker84/TP5-PB_producao"><img src="assets/en/project-infnet-hub-prod.svg" width="100%" alt="Infnet Hub · Production: Spring Boot microservices running on Kubernetes with full observability (Prometheus, Grafana, Loki, Tempo) and CI/CD."></a>
+  <a href="https://github.com/andrebecker84/TP4-PB_eventos"><img src="assets/en/project-infnet-hub-events.svg" width="100%" alt="Infnet Hub · Events: Refactored to event-driven with RabbitMQ: outbox, quorum queues, DLQ, saga and request/reply, secured by a Keycloak BFF."></a>
+  <a href="https://github.com/andrebecker84/ecommerce-ddd-async-messaging-TP3"><img src="assets/en/project-async-messaging.svg" width="100%" alt="E-commerce · Async Messaging: Commands over RabbitMQ, events over Kafka, mirrored to SNS/SQS FIFO. Transactional outbox and inbox with an orchestrated saga."></a>
+  <a href="https://github.com/andrebecker84/microservices-devops-api-vendas-TP3"><img src="assets/en/project-jwt-auth.svg" width="100%" alt="Sales API · JWT Auth: Auth service with login and rotating refresh tokens, protected routes at the gateway and services. Reactive stack with WebFlux and R2DBC."></a>
+  <a href="https://github.com/andrebecker84/ecommerce-ddd-refactoring-TP1"><img src="assets/en/project-monolith-to-ms.svg" width="100%" alt="From Monolith to Microservices: Extracting the Payments bounded context from a live e-commerce monolith using DDD and Branch by Abstraction."></a>
+  <a href="https://github.com/andrebecker84/ml-portfolio"><img src="assets/en/project-ml-portfolio.svg" width="100%" alt="Machine Learning Portfolio: Notebooks covering classification, clustering, feature engineering and NLP, with model interpretability through SHAP."></a>
 </p>
 
 <p align="center">

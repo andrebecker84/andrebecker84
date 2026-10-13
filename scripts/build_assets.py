@@ -650,32 +650,35 @@ PROJECTS = [
 
 
 def build_projects():
-    w = 480
-    nmax = max(len(wrap(T(p["desc"]), "r", 15, w - 52)) for p in PROJECTS)
-    h = round(108 + (nmax - 1) * 22.5 + 74)
+    """Um cartão por linha, na largura total: categoria, título com os chips à direita e a descrição."""
+    w = 960
+    nmax = max(len(wrap(T(p["desc"]), "r", 15.5, w - 64)) for p in PROJECTS)
+    h = round(112 + (nmax - 1) * 23.5 + 30)
     for p in PROJECTS:
         d = Doc()
-        lines = wrap(T(p["desc"]), "r", 15, w - 52)
-        y = 108
+        lines = wrap(T(p["desc"]), "r", 15.5, w - 64)
+        title = T(p["title"])
         body = [panel(w, h),
-                f'<circle cx="31" cy="36" r="3.5" fill="{p["color"]}"/>',
-                d.t(44, 40.5, T(p["tag"]), 12, LABEL, "s", ls=1.8),
-                arrow(w - 44, 27),
-                f'<g transform="translate(23 53) scale(1.1)" fill="{p["color"]}" fill-opacity="0.14" stroke="{p["color"]}" '
+                f'<circle cx="35" cy="37" r="3.5" fill="{p["color"]}"/>',
+                d.t(48, 41.5, T(p["tag"]), 12, LABEL, "s", ls=1.8),
+                arrow(w - 46, 26),
+                f'<g transform="translate(27 54) scale(1.1)" fill="{p["color"]}" fill-opacity="0.14" stroke="{p["color"]}" '
                 f'stroke-width="1.45" stroke-linejoin="round">{ICONS["folder"]}</g>',
-                d.t(57, 77, T(p["title"]), 22, TEXT, "s")]
-        assert 57 + width(T(p["title"]), "s", 22) < w - 26, f"título longo demais: {T(p['title'])}"
-        for ln in lines:
-            body.append(d.t(26, y, ln, 15, DESC, "r"))
-            y += 22.5
-        assert y - 22.5 < h - 70, (p["slug"], LANG, y)   # última linha acima dos chips
-        cx = 26
-        for c in p["chips"]:
-            cw = width(c, "m", 12.5) + 26
-            body.append(f'<rect x="{cx + .5}" y="{h - 49.5}" width="{cw - 1:.1f}" height="29" rx="14.5" fill="#fff" fill-opacity="0.035" stroke="{CHIP_BORDER}"/>')
-            body.append(d.t(cx + cw / 2, h - 30.5, c, 12.5, LABEL, "m", anchor="middle"))
+                d.t(61, 78, title, 22, TEXT, "s")]
+        # chips alinhados à direita, na linha do título
+        cws = [width(c, "m", 12.5) + 26 for c in p["chips"]]
+        cx = w - 30 - (sum(cws) + 8 * (len(cws) - 1))
+        assert 61 + width(title, "s", 22) + 24 < cx, f"chips encostam no título: {title}"
+        for c, cw in zip(p["chips"], cws):
+            body.append(f'<rect x="{cx + .5:.1f}" y="58.5" width="{cw - 1:.1f}" height="29" rx="14.5" fill="#fff" fill-opacity="0.035" stroke="{CHIP_BORDER}"/>')
+            body.append(d.t(cx + cw / 2, 77.5, c, 12.5, LABEL, "m", anchor="middle"))
             cx += cw + 8
-        write(f"project-{p['slug']}.svg", d.svg(w, h, f'{T(p["title"])}: {T(p["desc"])}', "\n".join(body)))
+        y = 112
+        for ln in lines:
+            body.append(d.t(30, y, ln, 15.5, DESC, "r"))
+            y += 23.5
+        assert y - 23.5 < h - 22, (p["slug"], LANG, y)
+        write(f"project-{p['slug']}.svg", d.svg(w, h, f'{title}: {T(p["desc"])}', "\n".join(body)))
 
 
 # ── Contato ────────────────────────────────────────────────────────────────
@@ -924,7 +927,7 @@ def build_readme():
 
     def project_link(p):
         alt = f'{T(p["title"])}: {T(p["desc"])}'
-        return f'<a href="{p["url"]}">{img("project-" + p["slug"] + ".svg", alt, 'width="49%"')}</a>'
+        return f'<a href="{p["url"]}">{img("project-" + p["slug"] + ".svg", alt)}</a>'
 
     def block(*lines):
         return '<p align="center">\n' + "\n".join(f"  {ln}" for ln in lines) + "\n</p>\n"
