@@ -323,15 +323,17 @@ def build_lang_toggle():
 
 
 def build_mylinks_pill():
-    """Pílula no topo do README, ao lado do seletor de idioma: atalho para o my-links."""
+    """Bloco à esquerda da faixa do Agora (mesma altura): atalho para o my-links."""
     d = Doc()
-    h = 38
+    _, w, h = TOPBAR
+    gap = 10                                   # respiro entre o bloco e a faixa (à direita)
     label = "my-links"
-    w = int(42 + width(label, "s", 12.5, 0.6) + 18)
-    body = (f'<rect x=".5" y=".5" width="{w - 1}" height="{h - 1}" rx="{h / 2}" fill="url(#surf)" stroke="{CHIP_BORDER}"/>'
-            f'<rect x="4" y="4" width="{w - 8}" height="{h - 8}" rx="{(h - 8) / 2}" fill="{CYAN}" fill-opacity="0.08"/>'
-            f'<g transform="translate(13 7) scale(.86)" fill="none" stroke="{CYAN}" stroke-width="1.8" stroke-linecap="round">{ICONS["links"]}</g>'
-            + d.t(42, 24.5, label, 12.5, TEXT, "s", ls=0.6))
+    tw = 22 + 8 + width(label, "s", 14.5, 0.4)
+    x0 = (w - gap - tw) / 2
+    body = (f'<rect x=".5" y=".5" width="{w - gap - 1}" height="{h - 1}" rx="14" fill="url(#surf)" stroke="{CYAN}" stroke-opacity="0.35"/>'
+            f'<rect x="1" y="1" width="{w - gap - 2}" height="{h - 2}" rx="13.5" fill="{CYAN}" fill-opacity="0.07"/>'
+            f'<g transform="translate({x0 - 2:.1f} {h / 2 - 11}) scale(.8)" fill="none" stroke="{CYAN}" stroke-width="2" stroke-linecap="round">{ICONS["links"]}</g>'
+            + d.t(x0 + 30, h / 2 + 5, label, 14.5, TEXT, "s", ls=0.4))
     write("my-links.svg", d.svg(w, h, "my-links", body))
 
 
@@ -510,7 +512,7 @@ def build_about():
                 + [width(ev, "mono", 14) for _, ev, _ in a["events"]]
                 + [width(T(pl), "mono", 13) for _, _, pl in a["events"]])
     TX, TY, BAR = 18, 18, 30
-    TW, TH = round(54 + log_w + 24 - TX), h - 2 * TY
+    TW, TH = round(54 + log_w + 62 - TX), h - 2 * TY
     RX = TX + TW + 36
     RW = w - RX - 36
     lines = wrap(T(a["text"]), "l", 16.5, RW)
@@ -520,7 +522,10 @@ def build_about():
     term = [f'<defs><clipPath id="tc"><rect x="{TX}" y="{TY}" width="{TW}" height="{TH}" rx="12"/></clipPath>'
             '<pattern id="scan" width="4" height="3" patternUnits="userSpaceOnUse"><rect width="4" height="1" fill="#fff" fill-opacity="0.025"/></pattern>'
             f'<radialGradient id="glow" cx="0.2" cy="0.25" r="0.9"><stop offset="0" stop-color="{GREEN}" stop-opacity="0.07"/>'
-            f'<stop offset="1" stop-color="{GREEN}" stop-opacity="0"/></radialGradient></defs>',
+            f'<stop offset="1" stop-color="{GREEN}" stop-opacity="0"/></radialGradient>'
+            '<filter id="tsh" x="-20%" y="-20%" width="140%" height="150%"><feGaussianBlur stdDeviation="9"/></filter></defs>',
+            # sombra: cópia escura e desfocada, um pouco abaixo da janela
+            f'<rect x="{TX + 4}" y="{TY + 12}" width="{TW - 8}" height="{TH - 6}" rx="14" fill="#000" fill-opacity="0.75" filter="url(#tsh)"/>',
             f'<rect x="{TX + .5}" y="{TY + .5}" width="{TW - 1}" height="{TH - 1}" rx="12" fill="#070b14"/>',
             f'<g clip-path="url(#tc)"><rect x="{TX}" y="{TY}" width="{TW}" height="{BAR}" fill="#fff" fill-opacity="0.035"/>'
             f'<rect x="{TX}" y="{TY + BAR}" width="{TW}" height="{TH - BAR}" fill="url(#glow)"/>'
@@ -590,31 +595,33 @@ NOW = {
 }
 
 
+TOPBAR = (810, 150, 58)   # linha do topo: Agora + my-links somam 960 de largura, mesma altura
+
+
 def build_now():
-    """Pílula compacta na linha do topo, antes do my-links: ponto pulsando, rótulo e manchete."""
+    """Faixa de fora a fora (com o my-links à esquerda): ponto pulsando, rótulo, manchete e stack em duas linhas."""
     d = Doc()
-    h = 38
-    label, head = T(NOW["label"]), T(NOW["headline"])
-    lx = 31
-    div = lx + width(label, "s", 10.5, 2.2) + 10
-    stack = NOW["stack"].replace("Kubernetes", "K8s")   # versão curta para caber na linha do topo
-    sx = div + 11 + width(head, "m", 12) + 11
-    w = int(sx + 11 + width(stack, "mono", 10.5) + 16)
-    body = f"""<rect x=".5" y=".5" width="{w - 1}" height="{h - 1}" rx="{h / 2}" fill="url(#surf)" stroke="{GREEN}" stroke-opacity="0.35"/>
-<rect x="4" y="4" width="{w - 8}" height="{h - 8}" rx="{(h - 8) / 2}" fill="{GREEN}" fill-opacity="0.07"/>
-<circle cx="18" cy="19" r="3.5" fill="none" stroke="{GREEN}" stroke-width="1.3">
-  <animate attributeName="r" values="3.5;9" dur="2s" repeatCount="indefinite"/>
+    w, _, h = TOPBAR
+    label, head, stack = T(NOW["label"]), T(NOW["headline"]), NOW["stack"]
+    lx = 40
+    div = lx + width(label, "s", 13, 2.6) + 18
+    assert div + 18 + max(width(head, "m", 16.5), width(stack, "mono", 14.5)) < w - 20, "Agora não cabe na faixa"
+    body = f"""<rect x=".5" y=".5" width="{w - 1}" height="{h - 1}" rx="14" fill="url(#surf)" stroke="{GREEN}" stroke-opacity="0.32"/>
+<rect x="1" y="1" width="{w - 2}" height="{h - 2}" rx="13.5" fill="url(#nowg)"/>
+<circle cx="22" cy="{h / 2}" r="4.5" fill="none" stroke="{GREEN}" stroke-width="1.4">
+  <animate attributeName="r" values="4.5;12" dur="2s" repeatCount="indefinite"/>
   <animate attributeName="stroke-opacity" values="0.7;0" dur="2s" repeatCount="indefinite"/>
 </circle>
-<circle cx="18" cy="19" r="3.6" fill="{GREEN}">
+<circle cx="22" cy="{h / 2}" r="4.6" fill="{GREEN}">
   <animate attributeName="fill-opacity" values="1;0.55;1" dur="2s" repeatCount="indefinite"/>
 </circle>
-{d.t(lx, 23, label, 10.5, GREEN, "s", ls=2.2)}
-<rect x="{div:.1f}" y="11" width="1" height="16" fill="{GREEN}" fill-opacity="0.3"/>
-{d.t(div + 11, 23.3, head, 12, TEXT, "m")}
-<rect x="{sx:.1f}" y="11" width="1" height="16" fill="{CHIP_BORDER}"/>
-{d.t(sx + 11, 23, stack, 10.5, BODY, "mono")}"""
-    write("now.svg", d.svg(w, h, f'{label}: {T(NOW["headline"])} · {NOW["stack"]}', body))
+{d.t(lx, h / 2 + 4.6, label, 13, GREEN, "s", ls=2.6)}
+<rect x="{div:.1f}" y="13" width="1" height="{h - 26}" fill="{GREEN}" fill-opacity="0.28"/>
+{d.t(div + 18, 25.5, head, 16.5, TEXT, "m")}
+{d.t(div + 18, 46, stack, 14.5, BODY, "mono")}"""
+    defs = (f'<linearGradient id="nowg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="{GREEN}" stop-opacity="0.12"/>'
+            f'<stop offset="0.6" stop-color="{GREEN}" stop-opacity="0.02"/><stop offset="1" stop-color="{GREEN}" stop-opacity="0"/></linearGradient>')
+    write("now.svg", d.svg(w, h, f'{label}: {head} · {stack}', body, defs))
 
 
 # ── Pilares ────────────────────────────────────────────────────────────────
@@ -1055,11 +1062,16 @@ def build_readme():
 
     section = dict(SECTIONS)
     other = ("Português", PT_README) if LANG == "en" else ("English", PROFILE)
-    now_pill = img("now.svg", f'{T(NOW["label"]).title()}: {T(NOW["headline"])} · {NOW["stack"]}', 'height="34"')
+    # faixa do topo: my-links + Agora, sem espaço entre as imagens; larguras proporcionais
+    # ao viewBox de cada uma (somam 100%), então as duas ficam com a mesma altura
+    nw, mw, _ = TOPBAR
+    pm, pn = f"{mw / (nw + mw) * 100:.3f}%", f"{nw / (nw + mw) * 100:.3f}%"
+    now_alt = f'{T(NOW["label"]).title()}: {T(NOW["headline"])} · {NOW["stack"]}'
+    topbar = (f'<a href="https://andrebecker84.github.io/my-links/"><img src="{a}/my-links.svg" width="{pm}" alt="my-links"></a>'
+              + img("now.svg", now_alt, f'width="{pn}"'))
     out = [f"<!-- Gerado por scripts/build_assets.py — edite os textos lá e rode: python scripts/build_assets.py -->\n",
-           f'<p align="right">\n  {now_pill}\n'
-           f'  <a href="https://andrebecker84.github.io/my-links/"><img src="{a}/my-links.svg" height="34" alt="my-links"></a>\n'
-           f'  <a href="{other[1]}"><img src="{a}/lang.svg" height="34" alt="{other[0]}"></a>\n</p>\n',
+           f'<p align="right">\n  <a href="{other[1]}"><img src="{a}/lang.svg" height="34" alt="{other[0]}"></a>\n</p>\n',
+           f'<p align="center">\n  {topbar}\n</p>\n',
            block(img("hero.svg", f'{HERO["name"]} · {T(HERO["kicker"]).title()} · {T(HERO["tagline"])}')),
            block(themed("section-about", T(section["about"]).title())),
            block(img("about.svg", T(ABOUT["text"]))),

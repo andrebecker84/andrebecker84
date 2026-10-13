@@ -1,9 +1,11 @@
 <!-- Gerado por scripts/build_assets.py — edite os textos lá e rode: python scripts/build_assets.py -->
 
 <p align="right">
-  <img src="assets/en/now.svg" height="34" alt="Now: Event-driven microservices · Java 25 · Spring Boot 4 · Kafka · Kubernetes">
-  <a href="https://andrebecker84.github.io/my-links/"><img src="assets/en/my-links.svg" height="34" alt="my-links"></a>
   <a href="https://github.com/andrebecker84/andrebecker84/blob/main/README.pt-BR.md"><img src="assets/en/lang.svg" height="34" alt="Português"></a>
+</p>
+
+<p align="center">
+  <a href="https://andrebecker84.github.io/my-links/"><img src="assets/en/my-links.svg" width="15.625%" alt="my-links"></a><img src="assets/en/now.svg" width="84.375%" alt="Now: Event-driven microservices · Java 25 · Spring Boot 4 · Kafka · Kubernetes">
 </p>
 
 <p align="center">
