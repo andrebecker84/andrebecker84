@@ -25,7 +25,7 @@
 </p>
 
 <p align="center">
-  <img src="assets/en/journey.svg" width="100%" alt="From designing buildings to designing systems.">
+  <picture><source media="(prefers-color-scheme: light)" srcset="assets/en/journey-light.svg"><img src="assets/en/journey.svg" width="100%" alt="From designing buildings to designing systems."></picture>
 </p>
 
 <p align="center">

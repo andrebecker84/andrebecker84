@@ -25,7 +25,7 @@
 </p>
 
 <p align="center">
-  <img src="assets/pt/journey.svg" width="100%" alt="De projetar edifícios a projetar sistemas.">
+  <picture><source media="(prefers-color-scheme: light)" srcset="assets/pt/journey-light.svg"><img src="assets/pt/journey.svg" width="100%" alt="De projetar edifícios a projetar sistemas."></picture>
 </p>
 
 <p align="center">

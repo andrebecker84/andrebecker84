@@ -240,10 +240,10 @@ LIGHT = {TEXT: "#1f2328", BODY: "#424a53", LABEL: "#424a53", MUTED: "#6e7781",
          BORDER: "#d0d7de", CHIP_BORDER: "#d0d7de", BLUE: "#0969da"}
 
 
-def write_themed(name, content, light_extra=None):
+def write_themed(name, content, light_extra=None, light_map=None):
     write(name, content.replace("<!--light-only-->", ""))
     light = content
-    for dark_c, light_c in LIGHT.items():
+    for dark_c, light_c in {**LIGHT, **(light_map or {})}.items():
         light = light.replace(f'"{dark_c}"', f'"{light_c}"')
     if light_extra:
         light = light.replace("<!--light-only-->", light_extra)
@@ -729,32 +729,56 @@ JOURNEY = {
 }
 
 
+def bubble(x, y, w, h, r, tx, tw=18, th=11):
+    """Retângulo arredondado com uma ponta no topo apontando para (tx, y - th)."""
+    return (f"M{x + r:.1f} {y} H{tx - tw / 2:.1f} L{tx:.1f} {y - th} L{tx + tw / 2:.1f} {y} H{x + w - r:.1f} "
+            f"A{r} {r} 0 0 1 {x + w:.1f} {y + r} V{y + h - r} A{r} {r} 0 0 1 {x + w - r:.1f} {y + h} "
+            f"H{x + r:.1f} A{r} {r} 0 0 1 {x:.1f} {y + h - r} V{y + r} A{r} {r} 0 0 1 {x + r:.1f} {y} Z")
+
+
+PAGE = "#0d1117"   # fundo do GitHub (escuro); recorta a linha tracejada atrás dos ícones
+
+
 def build_journey():
+    """Sem cartão: frase, linha do tempo tracejada e um balão saindo de cada ícone."""
     d = Doc()
-    w, h = 960, 250
-    LY, T_ = 112, 42                      # linha do tempo e tamanho do ícone
-    col = (w - 64) / 3
-    parts = [panel(w, h),
-             d.t(32, 57, T(JOURNEY["hook"]), 20, TEXT, "s"),
-             f'<defs><linearGradient id="tl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="{VIOLET}" stop-opacity="0.5"/>'
-             f'<stop offset="0.5" stop-color="{ROSE}" stop-opacity="0.5"/><stop offset="1" stop-color="{GREEN}" stop-opacity="0.6"/></linearGradient></defs>',
-             f'<rect x="40" y="{LY - .75}" width="{w - 80}" height="1.5" fill="url(#tl)"/>']
-    for i, (color, icon, period, role, where) in enumerate(JOURNEY["steps"]):
-        x = 32 + i * col
+    w, gap, T_ = 960, 16, 44
+    LY = 80                                   # altura da linha do tempo
+    bw = (w - gap * 2) / 3
+    top = LY + T_ / 2 + 14                    # topo dos balões (a ponta sobe até o ícone)
+    bh = 104
+    h = int(top + bh + 2)
+    steps = JOURNEY["steps"]
+    defs = (f'<linearGradient id="tl" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="{w}" y2="0"><stop offset="0" stop-color="{VIOLET}" stop-opacity="0.65"/>'
+            f'<stop offset="0.5" stop-color="{ROSE}" stop-opacity="0.65"/><stop offset="1" stop-color="{GREEN}" stop-opacity="0.75"/></linearGradient>'
+            + "".join(f'<linearGradient id="b{i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{c}" stop-opacity="0.13"/>'
+                      f'<stop offset="1" stop-color="{c}" stop-opacity="0.02"/></linearGradient>' for i, (c, *_) in enumerate(steps)))
+    parts = [d.t(2, 28, T(JOURNEY["hook"]), 20, TEXT, "s"),
+             f'<line x1="0" y1="{LY}" x2="{w}" y2="{LY}" stroke="url(#tl)" stroke-width="1.6" stroke-dasharray="7 6" stroke-linecap="round"/>']
+    for i, (color, icon, period, role, where) in enumerate(steps):
+        x = i * (bw + gap)
+        ix = x + 22                           # ícone alinhado à esquerda do balão
+        icx = ix + T_ / 2
         ty = LY - T_ / 2
-        if i == len(JOURNEY["steps"]) - 1:  # etapa atual: aro pulsando em volta do ícone
-            cxp = x + T_ / 2
-            parts.append(f'<g transform="translate({cxp:.1f} {LY})"><rect x="{-T_ / 2}" y="{-T_ / 2}" width="{T_}" height="{T_}" rx="11" fill="none" stroke="{color}" stroke-width="1.5">'
+        parts.append(f'<rect x="{ix - 6:.1f}" y="{ty - 6}" width="{T_ + 12}" height="{T_ + 12}" rx="15" fill="{PAGE}"/>')
+        if i == len(steps) - 1:  # etapa atual: aro pulsando em volta do ícone
+            parts.append(f'<g transform="translate({icx:.1f} {LY})"><rect x="{-T_ / 2}" y="{-T_ / 2}" width="{T_}" height="{T_}" rx="12" fill="none" stroke="{color}" stroke-width="1.5">'
                          '<animate attributeName="stroke-opacity" values="0.8;0" dur="2s" repeatCount="indefinite"/>'
                          '<animateTransform attributeName="transform" type="scale" values="1;1.35" dur="2s" repeatCount="indefinite"/></rect></g>')
-        parts.append(f'<rect x="{x - 3}" y="{ty - 3}" width="{T_ + 6}" height="{T_ + 6}" rx="13" fill="{SURF_TOP}"/>')
-        parts.append(tile(x, ty, T_, color, ICONS[icon], r=11))
-        parts += [cal(x, LY + 52, color, 13),
-                  d.t(x + 19, LY + 52, T(period), 13, color, "mono"),
-                  d.t(x, LY + 80, T(role), 17.5, TEXT, "s"),
-                  d.t(x, LY + 105, T(where), 14, BODY, "r")]
-        assert x + width(T(where), "r", 14) < 32 + (i + 1) * col - 8, f"linha da trajetória encosta na próxima: {T(where)}"
-    write("journey.svg", d.svg(w, h, T(JOURNEY["hook"]) + " " + " → ".join(T(s[3]) for s in JOURNEY["steps"]), "\n".join(parts)))
+        parts.append(tile(ix, ty, T_, color, ICONS[icon], r=12))
+        path = bubble(x + .5, top, bw - 1, bh - 1, 14, icx)
+        parts += [f'<path d="{path}" fill="url(#surf)"/>',
+                  f'<path d="{path}" fill="url(#b{i})" stroke="{color}" stroke-opacity="0.38"/>',
+                  cal(x + 22, top + 30, color, 13),
+                  d.t(x + 41, top + 30, T(period), 13, color, "mono"),
+                  d.t(x + 22, top + 58, T(role), 17.5, TEXT, "s"),
+                  d.t(x + 22, top + 83, T(where), 14, BODY, "r")]
+        assert x + 22 + width(T(where), "r", 14) < x + bw - 14, f"texto estoura o balão: {T(where)}"
+        assert x + 22 + width(T(role), "s", 17.5) < x + bw - 14, f"texto estoura o balão: {T(role)}"
+    # no tema claro: balões claros, recorte branco atrás dos ícones
+    write_themed("journey.svg",
+                 d.svg(w, h, T(JOURNEY["hook"]) + " " + " → ".join(T(s[3]) for s in steps), "\n".join(parts), defs),
+                 light_map={PAGE: "#ffffff", SURF_TOP: "#f6f8fa", SURF_BOT: "#ffffff"})
 
 
 # ── Formação, certificações e idiomas ──────────────────────────────────────
@@ -946,7 +970,7 @@ def build_readme():
            block(img("about.svg", T(ABOUT["text"]))),
            block(img("now.svg", f'{T(NOW["label"]).title()}: {T(NOW["headline"])} · {NOW["stack"]}')),
            block(themed("section-journey", T(section["journey"]).title())),
-           block(img("journey.svg", T(JOURNEY["hook"]))),
+           block(themed("journey", T(JOURNEY["hook"]))),
            block(themed("section-focus", T(section["focus"]).title())),
            block(img("focus.svg", " · ".join(T(p[2]) for p in PILLARS))),
            block(themed("section-work", T(section["work"]).title())),
