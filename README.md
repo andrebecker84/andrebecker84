@@ -9,11 +9,11 @@
 </p>
 
 <p align="center">
-  <img src="assets/about.svg" width="100%" alt="André Luis Becker. Software Engineer, Backend & Architecture. I design and build backend systems that scale: distributed, event-driven services in Java and Spring, shipped to Kubernetes with observability built in from day one.">
+  <img src="assets/about.svg" width="100%" alt="André Luis Becker. Software Engineer, Backend & Architecture. I design and build backend systems that scale: distributed, event-driven services in Java and Spring, shipped to Kubernetes with observability built in from day one. Based in Brazil; open to remote, hybrid or on-site work (preferably remote or hybrid).">
 </p>
 
 <p align="center">
-  <img src="assets/now.svg" width="100%" alt="Now: building event-driven microservices with Java 25, Spring Boot 4, Kafka and Kubernetes">
+  <img src="assets/now.svg" width="100%" alt="Now: event-driven microservices · Java 25 · Spring Boot 4 · Kafka · Kubernetes">
 </p>
 
 <p align="center">
@@ -83,7 +83,7 @@
 
 <p align="center">
   <a href="https://www.linkedin.com/in/becker84"><img src="assets/link-linkedin.svg" width="32%" alt="LinkedIn"></a>
-  <a href="mailto:contato-protegido@example.invalid"><img src="assets/link-mail.svg" width="32%" alt="E-mail"></a>
+  <a href="https://andrebecker84.github.io/my-links/#contato"><img src="assets/link-lock.svg" width="32%" alt="Contact · Contato: phone, e-mail and full résumé, password-protected"></a>
   <a href="https://andrebecker84.github.io/my-links/"><img src="assets/link-links.svg" width="32%" alt="Links"></a>
 </p>
 

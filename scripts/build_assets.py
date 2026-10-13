@@ -234,7 +234,7 @@ ICONS = {
     "folder": '<path d="M3 7a2 2 0 0 1 2-2h4.2l2 2.2H19a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/>'
               '<path d="M3 10h18" fill="none" stroke-opacity="0.6"/>',
     "linkedin": '<rect x="5" y="5" width="18" height="18" rx="4"/><path d="M10 13v6M10 9.8v.2M14 19v-6M14 15.5c0-1.5 1-2.5 2.3-2.5s2.2 1 2.2 2.5V19"/>',
-    "mail": '<rect x="5" y="7.5" width="18" height="13" rx="3"/><path d="m6 9.5 8 6 8-6"/>',
+    "lock": '<rect x="7" y="12.5" width="14" height="10" rx="2.5"/><path d="M10 12.5V10a4 4 0 0 1 8 0v2.5M14 16.2v2.6"/>',
     "cap": '<path d="M2 11 14 5l12 6-12 6Z"/><path d="M7 13.5V19c0 1.7 3.1 3 7 3s7-1.3 7-3v-5.5M26 11v6"/>',
     "award": '<circle cx="14" cy="10.5" r="6.5"/><path d="m10.2 15.8-2.2 8.7 6-3 6 3-2.2-8.7"/>',
     "globe": '<circle cx="14" cy="14" r="10"/><path d="M4 14h20M14 4c2.8 3 4 6.4 4 10s-1.2 7-4 10c-2.8-3-4-6.4-4-10s1.2-7 4-10Z"/>',
@@ -408,7 +408,8 @@ ABOUT = {
     "pt": ("Projeto e construo sistemas backend que escalam: serviços distribuídos e orientados a eventos "
            "em Java e Spring, entregues no Kubernetes com observabilidade desde o primeiro dia. "
            "Recentemente explorando agentes de IA e machine learning."),
-    "place": "Brazil · Remote-friendly",
+    # selo: país + modalidades (preferência em destaque, presencial discreto)
+    "place": [("Brazil", "m", "text"), ("Remote", "s", "pref"), ("Hybrid", "s", "pref"), ("On-site", "r", "alt")],
     "events": [  # (cor, evento, payload)
         (BLUE, "VisitorArrived", '{ from: "github" }'),
         (AMBER, "GreetingEmitted", '{ en: "Hello", pt: "Olá" }'),
@@ -451,20 +452,24 @@ def build_about():
 
     right = [d.t(RX, y_en + i * 23, ln, 14.5, BODY, "r") for i, ln in enumerate(en)]
     right += [d.t(RX, y_pt + i * 20, ln, 13, MUTED, "i") for i, ln in enumerate(pt)]
-    # selo de localização: "Brazil · Remote-friendly" em pílula com tom azul
-    country, mode = a["place"].split(" · ")
+    # selo de localização e modalidades, em pílula com tom azul
     top = y_place - 20
-    x_country = RX + 34
-    x_dot = x_country + width(country, "m", 12.5) + 7
-    x_mode = x_dot + width("·", "r", 12.5) + 7
-    pill_w = x_mode + width(mode, "s", 12.5) + 16 - RX
+    colors = {"text": TEXT, "pref": BLUE, "alt": MUTED}
+    x = RX + 34
+    pill_parts = []
+    for i, (label, face, kind) in enumerate(a["place"]):
+        if i:
+            pill_parts.append(d.t(x + 7, top + 19.5, "·", 12.5, MUTED, "r"))
+            x += width("·", "r", 12.5) + 14
+        pill_parts.append(d.t(x, top + 19.5, label, 12.5, colors[kind], face))
+        x += width(label, face, 12.5)
+    pill_w = x + 16 - RX
+    assert RX + pill_w < w - 24, "selo de localização estoura o painel"
     right.append(f'<rect x="{RX + .5}" y="{top + .5}" width="{pill_w - 1:.1f}" height="29" rx="14.5" '
                  f'fill="{BLUE}" fill-opacity="0.10" stroke="{BLUE}" stroke-opacity="0.38"/>')
     right.append(f'<g transform="translate({RX + 13} {top + 7.5})" fill="none" stroke="{BLUE}" stroke-width="1.5">'
                  '<path d="M6 1.5a4.5 4.5 0 0 1 4.5 4.5c0 3.4-4.5 8-4.5 8S1.5 9.4 1.5 6A4.5 4.5 0 0 1 6 1.5Z"/><circle cx="6" cy="6" r="1.6"/></g>')
-    right.append(d.t(x_country, top + 19.5, country, 12.5, TEXT, "m"))
-    right.append(d.t(x_dot, top + 19.5, "·", 12.5, MUTED, "r"))
-    right.append(d.t(x_mode, top + 19.5, mode, 12.5, BLUE, "s"))
+    right += pill_parts
 
     body = f"""{panel(w, h)}
 <rect x="452" y="32" width="1" height="{h - 64}" fill="{BORDER}"/>
@@ -475,8 +480,9 @@ def build_about():
 
 # ── Now ────────────────────────────────────────────────────────────────────
 NOW = {
-    "en": "Building event-driven microservices with Java 25, Spring Boot 4, Kafka and Kubernetes",
-    "pt": "Construindo microsserviços orientados a eventos com Java 25, Spring Boot 4, Kafka e Kubernetes",
+    "en": "Event-driven microservices",
+    "pt": "Microsserviços orientados a eventos",
+    "stack": "Java 25 · Spring Boot 4 · Kafka · Kubernetes",
 }
 
 
@@ -497,9 +503,10 @@ def build_now():
 </circle>
 {d.t(lx, 43, label, 11, GREEN, "s", ls=3)}
 <rect x="{div:.1f}" y="22" width="1" height="34" fill="{BORDER}"/>
-{d.t(div + 22, 35, NOW["en"], 14.5, TEXT, "r")}
-{d.t(div + 22, 56, NOW["pt"], 12.5, MUTED, "i")}"""
-    write("now.svg", d.svg(w, h, NOW["en"], body))
+{d.t(div + 22, 36, NOW["en"], 15, TEXT, "m")}
+{d.t(div + 22 + width(NOW["en"], "m", 15) + 14, 36, NOW["pt"], 12.5, MUTED, "i")}
+{d.t(div + 22, 57, NOW["stack"], 11.5, BODY, "mono")}"""
+    write("now.svg", d.svg(w, h, f'{NOW["en"]} · {NOW["stack"]}', body))
 
 
 # ── Pilares ────────────────────────────────────────────────────────────────
@@ -602,7 +609,7 @@ def build_projects():
 # ── Contato ────────────────────────────────────────────────────────────────
 LINKS = [
     ("linkedin", BLUE, "LinkedIn", "in/becker84"),
-    ("mail", AMBER, "E-mail", "contato-protegido@example.invalid"),
+    ("lock", AMBER, "Contact · Contato", "password · com senha"),
     ("links", CYAN, "Links", "andrebecker84.github.io"),
 ]
 
