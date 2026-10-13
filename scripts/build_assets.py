@@ -314,6 +314,21 @@ def build_lang_toggle():
     write("lang.svg", d.svg(w, h, "English · Português", "".join(parts)))
 
 
+def build_mylinks_pill():
+    """Pílula no topo do README, ao lado do seletor de idioma: atalho para o my-links."""
+    d = Doc()
+    h = 38
+    label = "my-links"
+    w = int(46 + width(label, "s", 12.5, 0.6) + 40)
+    body = (f'<rect x=".5" y=".5" width="{w - 1}" height="{h - 1}" rx="{h / 2}" fill="url(#surf)" stroke="{CHIP_BORDER}"/>'
+            f'<rect x="4" y="4" width="{w - 8}" height="{h - 8}" rx="{(h - 8) / 2}" fill="{CYAN}" fill-opacity="0.08"/>'
+            f'<g transform="translate(13 7) scale(.86)" fill="none" stroke="{CYAN}" stroke-width="1.8" stroke-linecap="round">{ICONS["links"]}</g>'
+            + d.t(42, 24.5, label, 12.5, TEXT, "s", ls=0.6)
+            + f'<g transform="translate({w - 30} 12) scale(.85)" fill="none" stroke="{CYAN}" stroke-width="1.6" stroke-linecap="round">'
+              '<path d="M3 11 11 3M5 3h6v6"/></g>')
+    write("my-links.svg", d.svg(w, h, "my-links", body))
+
+
 # ── Hero ───────────────────────────────────────────────────────────────────
 HERO = {
     "kicker": {"en": "SOFTWARE ENGINEER", "pt": "ENGENHEIRO DE SOFTWARE"},
@@ -764,7 +779,9 @@ def build_journey():
     hw = width(hook, "i", 19)
     parts = [  # frase como pensamento: itálico entre aspas grandes nas cores da linha do tempo
              d.t(0, 44, "“", 48, VIOLET, "s", extra='fill-opacity="0.75"'),
-             d.t(30, 30, hook, 19, TEXT, "i"),
+             f'<defs><linearGradient id="hk" gradientUnits="userSpaceOnUse" x1="30" y1="0" x2="{30 + hw:.0f}" y2="0">'
+             f'<stop offset="0" stop-color="{VIOLET}"/><stop offset="0.5" stop-color="{ROSE}"/><stop offset="1" stop-color="{GREEN}"/></linearGradient></defs>',
+             d.t(30, 30, hook, 19, "url(#hk)", "i"),
              d.t(30 + hw + 6, 44, "”", 48, GREEN, "s", extra='fill-opacity="0.75"'),
              f'<line x1="0" y1="{LY}" x2="{w}" y2="{LY}" stroke="url(#tl)" stroke-width="1.6" stroke-dasharray="7 6" stroke-linecap="round"/>']
     for i, (color, icon, period, role, where) in enumerate(steps):
@@ -790,7 +807,8 @@ def build_journey():
     # no tema claro: balões claros, recorte branco atrás dos ícones
     write_themed("journey.svg",
                  d.svg(w, h, T(JOURNEY["hook"]) + " " + " → ".join(T(s[3]) for s in steps), "\n".join(parts), defs),
-                 light_map={PAGE: "#ffffff", SURF_TOP: "#f6f8fa", SURF_BOT: "#ffffff"})
+                 light_map={PAGE: "#ffffff", SURF_TOP: "#f6f8fa", SURF_BOT: "#ffffff",
+                            VIOLET: "#8250df", ROSE: "#bf3989", GREEN: "#1a7f37"})   # tons do Primer, legíveis no branco
 
 
 # ── Formação, certificações e idiomas ──────────────────────────────────────
@@ -989,7 +1007,8 @@ def build_readme():
     section = dict(SECTIONS)
     other = ("Português", PT_README) if LANG == "en" else ("English", PROFILE)
     out = [f"<!-- Gerado por scripts/build_assets.py — edite os textos lá e rode: python scripts/build_assets.py -->\n",
-           f'<p align="right">\n  <a href="{other[1]}"><img src="{a}/lang.svg" height="34" alt="{other[0]}"></a>\n</p>\n',
+           f'<p align="right">\n  <a href="https://andrebecker84.github.io/my-links/"><img src="{a}/my-links.svg" height="34" alt="my-links"></a>\n'
+           f'  <a href="{other[1]}"><img src="{a}/lang.svg" height="34" alt="{other[0]}"></a>\n</p>\n',
            block(img("hero.svg", f'{HERO["name"]} · {T(HERO["kicker"]).title()} · {T(HERO["tagline"])}')),
            block(themed("section-about", T(section["about"]).title())),
            block(img("about.svg", T(ABOUT["text"]))),
@@ -1021,6 +1040,7 @@ if __name__ == "__main__":
         OUT = ASSETS / LANG
         print(f"── {LANG}")
         build_lang_toggle()
+        build_mylinks_pill()
         build_hero()
         build_sections()
         build_about()

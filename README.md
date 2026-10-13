@@ -1,6 +1,7 @@
 <!-- Gerado por scripts/build_assets.py — edite os textos lá e rode: python scripts/build_assets.py -->
 
 <p align="right">
+  <a href="https://andrebecker84.github.io/my-links/"><img src="assets/en/my-links.svg" height="34" alt="my-links"></a>
   <a href="https://github.com/andrebecker84/andrebecker84/blob/main/README.pt-BR.md"><img src="assets/en/lang.svg" height="34" alt="Português"></a>
 </p>
 

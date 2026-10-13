@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="149" height="38" viewBox="0 0 149 38" role="img" aria-label="my-links">
+<title>my-links</title>
+<style>@font-face{font-family:P;font-weight:600;font-style:normal;src:url(data:font/woff;base64,d09GRgABAAAAAASUAAwAAAAABMAABAEGAAAAAAAAAAAAAAAAAAAAAAAAAABHUE9TAAAERAAAACAAAAAgRHZMdUdTVUIAAARkAAAAMAAAADAfSCdrT1MvMgAAA4wAAABPAAAAYFpBX3ljbWFwAAAD3AAAAEoAAABcAVABemdseWYAAAEcAAABsQAAAgADskuTaGVhZAAAAwgAAAA2AAAANhqEJG5oaGVhAAADbAAAACAAAAAkDDABomhtdHgAAANAAAAALAAAACwW/gIEbG9jYQAAAvAAAAAYAAAAGAH/Ap5tYXhwAAAC0AAAAB0AAAAgACEBB25hbWUAAAQoAAAABgAAAAYABgAAcG9zdAAABDAAAAAUAAAAIP+4ADJ4nGWRT2vUYBCHf+9EU9TDNmaTpWyU3b5u0o3aNnnzp6mLsglhL0UvLSv0uNBeevC0iLAnoaeU4sGj0KtfwIP6GcQeFEHwIDnpQg+KgtispN0K4mGYgRmeeZiZTNBjNjtiByBcBEAIAHyWZnEJFeCy6XuBcHWtKvOawpVtx2m1HKeVZrSzxPlSGfHxe7IBhhSghPKS07Q0rgglFJLK9l5n2csX33+Mx5QXm1+LL8V4Oo1DyiEBqsKVw4zyY4Py0470gVzMA9A1hSueyeflfwqhBaVWLQiEtDnK4ihKsjhaTbKsviG6W0Z9u0Pu6EHxirndNO0Wb84y2QlfCMXy6tR3g1yo/+05wbOPj6ZMo++d0eJeLy4p6bU2GKzJT/aNBGxAN01L6LpwA98zrUXyvVNDbp5Aq3rtKtWqsszf7dyR9s6F7YWbYef2vcgfJIOhvCs5bbO9cqtzN2L+IL7grIuG3Zir12crjXhlce3GYL1pGXPGlUqlkYTLa9fLC54vflGfbMwAjHFVEqpK/eL504efnu0/Ifv3W1Yloxixx2B/vywBTGv67Ki4zw6Gwz+KtnY4AAAAeJxjYGRgYOBmmMDAw1DCwMYA4iEAMwMTABqeASkAAAAAAAAAAAAACAAlADwASQB9AJ4A3QDzAQAAAQAAAAQBBhHOQqhfDzz1AAMD6AAAAADYpKnFAAAAANsWNs394f2vCc4EQwAAAAcAAgAAAAAAAAH0AAAA7gAAAkcARwEWADYCSABFARYARQQYAEUClQBFAiEAJwJdAAUCNgBHeJxjYGRgYJH6t4ghhXPP34c/LTjPMTAyoAJuAKfkBtt4nGNgYU5iimBgZWBg6mKKYGBg8IbQjHEMRow+DAwMDOwgAgIYEUwGBs8QN3+GAwwKDJUsUv8WMaSw5DMVw9QwaTHtZWBgUGBgAQDSqgprAHicTcuxDUBgFADhj19EpTKABexhFZFoVLbQKNjLACZ5EhSuuVxxyJHQSLLHhR61Sq7U6gwmsyWCr8e344ozjthji/W5f9xVuxK+AAAAAAAAAAYAAHicY2BmAIP/WxmMICxUAAAswgHqAAEAAAAKABwAHgABREZMVAAIAAQAAAAA//8AAAAAAAAAAQAAAAoALAAuAANERkxUABRkZXYyAB5kZXZhAB4ABAAAAAD//wAAAAAAAAAAAAA=) format('woff');}</style>
+<defs>
+  <linearGradient id="surf" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#0f1729"/><stop offset="1" stop-color="#0a101d"/>
+  </linearGradient>
+  <linearGradient id="hl" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+    <stop offset="0.5" stop-color="#fff" stop-opacity="0.09"/>
+    <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="rule" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#1c2740"/><stop offset="1" stop-color="#1c2740" stop-opacity="0"/>
+  </linearGradient>
+  
+</defs>
+<rect x=".5" y=".5" width="148" height="37" rx="19.0" fill="url(#surf)" stroke="#26324c"/><rect x="4" y="4" width="141" height="30" rx="15.0" fill="#22d3ee" fill-opacity="0.08"/><g transform="translate(13 7) scale(.86)" fill="none" stroke="#22d3ee" stroke-width="1.8" stroke-linecap="round"><path d="M12.5 15.5a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M15.5 12.5a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></g><text x="42.0" y="24.5" font-family="P, 'Segoe UI', -apple-system, sans-serif" font-size="12.5" font-weight="600" letter-spacing="0.6" fill="#f1f4f9" >my-links</text><g transform="translate(119 12) scale(.85)" fill="none" stroke="#22d3ee" stroke-width="1.6" stroke-linecap="round"><path d="M3 11 11 3M5 3h6v6"/></g>
+</svg>
