@@ -15,5 +15,5 @@
   </linearGradient>
   
 </defs>
-<rect x=".5" y=".5" width="139" height="57" rx="14" fill="url(#surf)" stroke="#22d3ee" stroke-opacity="0.35"/><rect x="1" y="1" width="138" height="56" rx="13.5" fill="#22d3ee" fill-opacity="0.07"/><g transform="translate(16.9 18.0) scale(.8)" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linecap="round"><path d="M12.5 15.5a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M15.5 12.5a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></g><text x="48.9" y="34.0" font-family="P, 'Segoe UI', -apple-system, sans-serif" font-size="14.5" font-weight="600" letter-spacing="0.4" fill="#f1f4f9" >my-links</text>
+<rect x="10.5" y=".5" width="139" height="57" rx="14" fill="url(#surf)" stroke="#22d3ee" stroke-opacity="0.35"/><rect x="11" y="1" width="138" height="56" rx="13.5" fill="#22d3ee" fill-opacity="0.07"/><g transform="translate(26.9 18.0) scale(.8)" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linecap="round"><path d="M12.5 15.5a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M15.5 12.5a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></g><text x="58.9" y="34.0" font-family="P, 'Segoe UI', -apple-system, sans-serif" font-size="14.5" font-weight="600" letter-spacing="0.4" fill="#f1f4f9" >my-links</text>
 </svg>

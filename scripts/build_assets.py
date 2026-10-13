@@ -308,30 +308,31 @@ def bkr_glyph():
 def build_lang_toggle():
     """Pílula com as duas bandeiras; a do idioma atual fica acesa."""
     d = Doc()
-    w, h = 122, 38
+    w, h = TOPBAR[1] - TOPGAP, 38          # mesma largura do bloco do my-links
+    half = (w - 8) / 2
     items = [("gb", "EN", "en"), ("br", "PT", "pt")]
     parts = [f'<rect x=".5" y=".5" width="{w - 1}" height="{h - 1}" rx="{h / 2}" fill="url(#surf)" stroke="{CHIP_BORDER}"/>']
     for i, (code, label, lang) in enumerate(items):
-        x = 4 + i * 57
+        x = 4 + i * half
         on = lang == LANG
         if on:
-            parts.append(f'<rect x="{x}" y="4" width="57" height="30" rx="15" fill="#fff" fill-opacity="0.08"/>')
-        parts.append(f'<g transform="translate({x + 9} 11)" opacity="{1 if on else 0.4}"><clipPath id="r{code}"><circle cx="8" cy="8" r="8"/></clipPath>'
+            parts.append(f'<rect x="{x}" y="4" width="{half}" height="30" rx="15" fill="#fff" fill-opacity="0.08"/>')
+        parts.append(f'<g transform="translate({x + 12} 11)" opacity="{1 if on else 0.4}"><clipPath id="r{code}"><circle cx="8" cy="8" r="8"/></clipPath>'
                      f'<g clip-path="url(#r{code})">{ROUND_FLAG[code]}</g><circle cx="8" cy="8" r="7.75" fill="none" stroke="#fff" stroke-opacity=".25" stroke-width=".5"/></g>')
-        parts.append(d.t(x + 30, 24.5, label, 12.5, TEXT if on else MUTED, "s", ls=1))
+        parts.append(d.t(x + 34, 24.5, label, 12.5, TEXT if on else MUTED, "s", ls=1))
     write("lang.svg", d.svg(w, h, "English · Português", "".join(parts)))
 
 
 def build_mylinks_pill():
-    """Bloco à esquerda da faixa do Agora (mesma altura): atalho para o my-links."""
+    """Bloco à direita da faixa do Agora, embaixo do idioma (mesma altura): atalho para o my-links."""
     d = Doc()
     _, w, h = TOPBAR
-    gap = 10                                   # respiro entre o bloco e a faixa (à direita)
+    gap = TOPGAP                               # respiro entre a faixa e o bloco (à esquerda)
     label = "my-links"
     tw = 22 + 8 + width(label, "s", 14.5, 0.4)
-    x0 = (w - gap - tw) / 2
-    body = (f'<rect x=".5" y=".5" width="{w - gap - 1}" height="{h - 1}" rx="14" fill="url(#surf)" stroke="{CYAN}" stroke-opacity="0.35"/>'
-            f'<rect x="1" y="1" width="{w - gap - 2}" height="{h - 2}" rx="13.5" fill="{CYAN}" fill-opacity="0.07"/>'
+    x0 = gap + (w - gap - tw) / 2
+    body = (f'<rect x="{gap + .5}" y=".5" width="{w - gap - 1}" height="{h - 1}" rx="14" fill="url(#surf)" stroke="{CYAN}" stroke-opacity="0.35"/>'
+            f'<rect x="{gap + 1}" y="1" width="{w - gap - 2}" height="{h - 2}" rx="13.5" fill="{CYAN}" fill-opacity="0.07"/>'
             f'<g transform="translate({x0 - 2:.1f} {h / 2 - 11}) scale(.8)" fill="none" stroke="{CYAN}" stroke-width="2" stroke-linecap="round">{ICONS["links"]}</g>'
             + d.t(x0 + 30, h / 2 + 5, label, 14.5, TEXT, "s", ls=0.4))
     write("my-links.svg", d.svg(w, h, "my-links", body))
@@ -596,10 +597,11 @@ NOW = {
 
 
 TOPBAR = (810, 150, 58)   # linha do topo: Agora + my-links somam 960 de largura, mesma altura
+TOPGAP = 10               # respiro entre a faixa do Agora e o bloco do my-links
 
 
 def build_now():
-    """Faixa de fora a fora (com o my-links à esquerda): ponto pulsando, rótulo, manchete e stack em duas linhas."""
+    """Faixa de fora a fora (com o my-links à direita): ponto pulsando, rótulo, manchete e stack em duas linhas."""
     d = Doc()
     w, _, h = TOPBAR
     label, head, stack = T(NOW["label"]), T(NOW["headline"]), NOW["stack"]
@@ -1066,11 +1068,12 @@ def build_readme():
     # ao viewBox de cada uma (somam 100%), então as duas ficam com a mesma altura
     nw, mw, _ = TOPBAR
     pm, pn = f"{mw / (nw + mw) * 100:.3f}%", f"{nw / (nw + mw) * 100:.3f}%"
+    pl = f"{(mw - TOPGAP) / (nw + mw) * 100:.3f}%"   # idioma com a mesma largura visível do my-links
     now_alt = f'{T(NOW["label"]).title()}: {T(NOW["headline"])} · {NOW["stack"]}'
-    topbar = (f'<a href="https://andrebecker84.github.io/my-links/"><img src="{a}/my-links.svg" width="{pm}" alt="my-links"></a>'
-              + img("now.svg", now_alt, f'width="{pn}"'))
+    topbar = (img("now.svg", now_alt, f'width="{pn}"')
+              + f'<a href="https://andrebecker84.github.io/my-links/"><img src="{a}/my-links.svg" width="{pm}" alt="my-links"></a>')
     out = [f"<!-- Gerado por scripts/build_assets.py — edite os textos lá e rode: python scripts/build_assets.py -->\n",
-           f'<p align="right">\n  <a href="{other[1]}"><img src="{a}/lang.svg" height="34" alt="{other[0]}"></a>\n</p>\n',
+           f'<p align="right">\n  <a href="{other[1]}"><img src="{a}/lang.svg" width="{pl}" alt="{other[0]}"></a>\n</p>\n',
            f'<p align="center">\n  {topbar}\n</p>\n',
            block(img("hero.svg", f'{HERO["name"]} · {T(HERO["kicker"]).title()} · {T(HERO["tagline"])}')),
            block(themed("section-about", T(section["about"]).title())),
