@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <img src="assets/en/now.svg" width="82.917%" alt="Now: Event-driven microservices · Java 25 · Spring Boot 4 · Kafka · Kubernetes"><a href="https://andrebecker84.github.io/my-links/"><img src="assets/en/my-links.svg" width="17.083%" alt="my-links"></a>
+  <img src="assets/en/now.svg" width="82.917%" alt="Now: Oh My Board Hub for a real client · Computer Science · Kotlin Multiplatform · Compose · Spring Boot 4 · PostgreSQL"><a href="https://andrebecker84.github.io/my-links/"><img src="assets/en/my-links.svg" width="17.083%" alt="my-links"></a>
 </p>
 
 <p align="center">

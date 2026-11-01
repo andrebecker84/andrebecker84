@@ -591,8 +591,8 @@ def build_about():
 # ── Now ────────────────────────────────────────────────────────────────────
 NOW = {
     "label": {"en": "NOW", "pt": "AGORA"},
-    "headline": {"en": "Event-driven microservices", "pt": "Microsserviços orientados a eventos"},
-    "stack": "Java 25 · Spring Boot 4 · Kafka · Kubernetes",
+    "headline": {"en": "Oh My Board Hub for a real client · Computer Science", "pt": "Oh My Board Hub para uma cliente real · Ciência da Computação"},
+    "stack": "Kotlin Multiplatform · Compose · Spring Boot 4 · PostgreSQL",
 }
 
 
@@ -801,7 +801,7 @@ JOURNEY = {
         (VIOLET, "building", "2007 — 2017", {"en": "Architecture & Urbanism", "pt": "Arquitetura e Urbanismo"},
          {"en": "Brazil · 10 years of practice", "pt": "Brasil · 10 anos de atuação"}),
         (ROSE, "inspect", "2017 — 2022", {"en": "Quality Control", "pt": "Controle de Qualidade"},
-         {"en": "Japan · Toyota Boshoku, Lexus, Suzuki", "pt": "Japão · Toyota Boshoku, Lexus, Suzuki"}),
+         {"en": "Japan · Toyota Boshoku · Suzuki", "pt": "Japão · Toyota Boshoku · Suzuki"}),
         (GREEN, "code", {"en": "2023 — now", "pt": "2023 — hoje"}, {"en": "Software Engineering", "pt": "Engenharia de Software"},
          {"en": "Brazil · Instituto Infnet", "pt": "Brasil · Instituto Infnet"}),
     ],
