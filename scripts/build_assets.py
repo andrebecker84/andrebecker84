@@ -749,6 +749,9 @@ def build_now():
     write("now.svg", d.svg(w, h, f'{label}: {head} · {stack}', body, defs))
 
 
+PILL_W = 280   # largura da pílula do my-links (celular), nas unidades do seletor de idioma (140)
+
+
 def build_topbar_m():
     """Celular: o my-links vira uma pílula ao lado do idioma (só no celular) e a faixa do Agora ocupa
     a linha toda. O README fixa a largura de cada peça do topo (83% + 17%), então a faixa é feita de
@@ -792,21 +795,22 @@ def build_topbar_m():
     defs = defs.replace(f'x1="0" y1="0" x2="{w + mw}"', f'x1="{-w}" y1="0" x2="{mw}"')
     write("my-links-m.svg", d.svg(mw, h, "my-links", body, defs))
 
-    # my-links em pílula, ao lado do idioma e com a mesma altura (20px na tela)
+    # my-links em pílula, ao lado do idioma: mesma altura e mesma escala dele (o README dá à pílula
+    # uma largura em % proporcional a PILL_W, então as duas crescem juntas em qualquer tela)
     d = Doc()
-    pw, ph = 164, 40
+    lw, lh = TOPBAR[1] - TOPGAP, 65
+    pw, ph = PILL_W, lh
     name = "my-links"
-    tx = 42
-    assert tx + width(name, "s", 19) < pw - 14, "my-links não cabe na pílula"
-    body = (f'<rect x="1" y="1" width="{pw - 2}" height="{ph - 2}" rx="{ph / 2 - 1}" fill="url(#surf)" stroke="{CYAN}" stroke-opacity="0.4" stroke-width="1.5"/>'
-            f'<rect x="2" y="2" width="{pw - 4}" height="{ph - 4}" rx="{ph / 2 - 2}" fill="{CYAN}" fill-opacity="0.08"/>'
-            f'<g transform="translate(13 7.5) scale(.9)" fill="none" stroke="{CYAN}" stroke-width="2" stroke-linecap="round">{ICONS["links"]}</g>'
-            + d.t(tx, 26.5, name, 19, TEXT, "s"))
-    write("my-links-pill-m.svg", d.svg(pw, ph, "my-links", body, size=(pw / 2, ph / 2)))
+    tx = 70
+    assert tx + width(name, "s", 30) < pw - 26, "my-links não cabe na pílula"
+    body = (f'<rect x="1.5" y="1.5" width="{pw - 3}" height="{ph - 3}" rx="{ph / 2 - 1.5}" fill="url(#surf)" stroke="{CYAN}" stroke-opacity="0.4" stroke-width="2"/>'
+            f'<rect x="3" y="3" width="{pw - 6}" height="{ph - 6}" rx="{ph / 2 - 3}" fill="{CYAN}" fill-opacity="0.08"/>'
+            f'<g transform="translate(24 {ph / 2 - 18}) scale(1.3)" fill="none" stroke="{CYAN}" stroke-width="2" stroke-linecap="round">{ICONS["links"]}</g>'
+            + d.t(tx, ph / 2 + 10.5, name, 30, TEXT, "s"))
+    write("my-links-pill-m.svg", d.svg(pw, ph, "my-links", body))
 
     # idioma: com 14,6% da linha (43px) não cabe texto legível; só as duas bandeiras
     d = Doc()
-    lw, lh = TOPBAR[1] - TOPGAP, 65
     parts = [f'<rect x="1" y="1" width="{lw - 2}" height="{lh - 2}" rx="{lh / 2 - 1}" fill="url(#surf)" stroke="{CHIP_BORDER}" stroke-width="2"/>']
     for i, (code, lang) in enumerate((("gb", "en"), ("br", "pt"))):
         cx = lw / 4 + i * lw / 2
@@ -1447,10 +1451,11 @@ def build_readme():
     now_alt = f'{T(NOW["label"]).title()}: {T(NOW["headline"])} · {NOW["stack"]}'
     topbar = (pic("now", now_alt, f'width="{pn}"')
               + f'<a href="https://andrebecker84.github.io/my-links/">' + pic("my-links", "my-links", f'width="{pm}"') + '</a>')
-    # no celular o my-links vira uma pílula ao lado do idioma (no desktop, um ponto transparente à
-    # esquerda dele, que não o tira do lugar)
+    # no celular o my-links vira uma pílula ao lado do idioma, com largura em % na mesma escala dele
+    # (mesma altura em qualquer tela); no desktop, uma linha transparente à esquerda, sem altura
+    pp = f"{(mw - TOPGAP) / (nw + mw) * 100 * PILL_W / (mw - TOPGAP):.3f}%"
     pill = (f'<a href="https://andrebecker84.github.io/my-links/"><picture><source media="{MOBILE}" srcset="{a}/my-links-pill-m.svg">'
-            f'<img src="assets/blank.svg" alt="my-links"></picture></a> ')
+            f'<img src="assets/blank-line.svg" width="{pp}" alt="my-links"></picture></a> ')
     lang = pill + f'<a href="{other[1]}">' + pic("lang", other[0], f'width="{pl}"') + '</a>'
     out = [f"<!-- Gerado por scripts/build_assets.py — edite os textos lá e rode: python scripts/build_assets.py -->\n",
            f'<p align="right">\n  {lang}\n</p>\n',
