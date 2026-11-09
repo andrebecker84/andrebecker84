@@ -1,7 +1,7 @@
 <!-- Gerado por scripts/build_assets.py — edite os textos lá e rode: python scripts/build_assets.py -->
 
 <p align="right">
-  <a href="https://github.com/andrebecker84/andrebecker84/blob/main/README.pt-BR.md"><picture><source media="(max-width: 640px)" srcset="assets/en/lang-m.svg"><img src="assets/en/lang.svg" width="14.583%" alt="Português"></picture></a>
+  <a href="https://andrebecker84.github.io/my-links/"><picture><source media="(max-width: 640px)" srcset="assets/en/my-links-pill-m.svg"><img src="assets/blank.svg" alt="my-links"></picture></a> <a href="https://github.com/andrebecker84/andrebecker84/blob/main/README.pt-BR.md"><picture><source media="(max-width: 640px)" srcset="assets/en/lang-m.svg"><img src="assets/en/lang.svg" width="14.583%" alt="Português"></picture></a>
 </p>
 
 <p align="center">

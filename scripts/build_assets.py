@@ -265,7 +265,7 @@ def write_themed(name, content, light_extra=None, light_map=None):
 # some. Cada peça ganha uma versão "-m" com 360 de largura e tudo empilhado (uma coluna), que o
 # README serve com <picture><source media=MOBILE>. O desktop continua com as peças de sempre.
 MOBILE = "(max-width: 640px)"
-MW = 360
+MW = 390
 
 
 def theme_css(light_map=None):
@@ -503,40 +503,42 @@ def build_hero():
 <svg x="{W - 64 - 84}" y="18" width="84" height="84" viewBox="0 0 96 96" overflow="visible">{inner}</svg>"""
     write("hero.svg", d.svg(W, H, f'{hero["name"]} · {T(hero["kicker"]).title()} · {tagline}', body, defs))
 
-    # Celular: identidade em cima (com o símbolo no canto) e o mesmo diagrama, reduzido, embaixo
+    # Celular: identidade num cartão (com o símbolo no canto) e o diagrama embaixo, fora do cartão,
+    # sem fundo
     dm = Doc()
     for face, chars in d.used.items():         # o diagrama reaproveita os textos do desktop
         dm.used[face] |= chars
-    x0, inner_w = 24, MW - 48
+    x0, inner_w = 22, MW - 44
     kick = T(hero["kicker"])
-    assert x0 + 30 + width(kick, "m", 11.5, 2.6) < MW - 24 - 46, "kicker encosta no símbolo"
-    name_size = min(33, 33 * inner_w / width(hero["name"], "s", 33))
-    m = [f'<rect x="{x0}" y="35" width="20" height="2" rx="1" fill="{AMBER}"/>',
-         dm.t(x0 + 30, 41, kick, 11.5, LABEL, "m", ls=2.6),
-         dm.t(x0 - 1, 90, hero["name"], round(name_size, 1), TEXT, "s")]
-    y = 124
-    for ln in wrap(tagline, "r", 16.5, inner_w):
-        m.append(dm.t(x0, y, ln, 16.5, BODY, "r"))
-        y += 24
-    chips, y = chip_rows(dm, [T(c) for c in hero["chips"]], x0, y - 6, inner_w, 13, 30, 22, 8, BODY)
+    assert x0 + 28 + width(kick, "m", 10.5, 2.4) < MW - 22 - 40, "kicker encosta no símbolo"
+    name_size = min(29, 29 * inner_w / width(hero["name"], "s", 29))
+    m = [f'<rect x="{x0}" y="33" width="18" height="2" rx="1" fill="{AMBER}"/>',
+         dm.t(x0 + 28, 38.5, kick, 10.5, LABEL, "m", ls=2.4),
+         dm.t(x0 - 1, 80, hero["name"], round(name_size, 1), TEXT, "s")]
+    y = 108
+    for ln in wrap(tagline, "r", 15, inner_w):
+        m.append(dm.t(x0, y, ln, 15, BODY, "r"))
+        y += 22
+    chips, y = chip_rows(dm, [T(c) for c in hero["chips"]], x0, y - 5, inner_w, 12, 27, 20, 7, BODY)
+    CH = round(y + 22)                         # altura do cartão
     # diagrama: do ícone do Kafka (BX1 - 3) até o fim do barramento, de 108 a 310
-    k = (MW - 36) / (BX2 - BX1 + 3)
-    dy = y + 26
-    MH = round(dy + (310 - 108) * k + 26)
-    diagram = f'<g transform="translate({18 - (BX1 - 3) * k:.2f} {dy - 108 * k:.2f}) scale({k:.4f})">{"".join(g)}</g>'
-    mdefs = defs.replace(f'<mask id="dm"><rect width="{W}" height="{H}"', f'<mask id="dm"><rect width="{MW}" height="{MH}"') \
-                .replace(f'<clipPath id="frame"><rect width="{W}" height="{H}" rx="20"/>', f'<clipPath id="frame"><rect width="{MW}" height="{MH}" rx="18"/>')
+    k = (MW - 8) / (BX2 - BX1 + 3)
+    dy = CH + 26
+    MH = round(dy + (310 - 108) * k + 6)
+    diagram = f'<g transform="translate({4 - (BX1 - 3) * k:.2f} {dy - 108 * k:.2f}) scale({k:.4f})">{"".join(g)}</g>'
+    mdefs = defs.replace(f'<mask id="dm"><rect width="{W}" height="{H}"', f'<mask id="dm"><rect width="{MW}" height="{CH}"') \
+                .replace(f'<clipPath id="frame"><rect width="{W}" height="{H}" rx="20"/>', f'<clipPath id="frame"><rect width="{MW}" height="{CH}" rx="18"/>')
     mbody = f"""<g clip-path="url(#frame)">
-<rect width="{MW}" height="{MH}" fill="url(#surf)"/>
-<rect width="{MW}" height="{MH}" fill="url(#dots)" mask="url(#dm)"/>
-<rect width="{MW}" height="{MH}" fill="url(#g1)"/>
-<rect width="{MW}" height="{MH}" fill="url(#g2)"/>
+<rect width="{MW}" height="{CH}" fill="url(#surf)"/>
+<rect width="{MW}" height="{CH}" fill="url(#dots)" mask="url(#dm)"/>
+<rect width="{MW}" height="{CH}" fill="url(#g1)"/>
+<rect width="{MW}" height="{CH}" fill="url(#g2)"/>
 </g>
-<rect x=".5" y=".5" width="{MW - 1}" height="{MH - 1}" rx="18" fill="none" stroke="{BORDER}"/>
+<rect x=".5" y=".5" width="{MW - 1}" height="{CH - 1}" rx="18" fill="none" stroke="{BORDER}"/>
 <rect x="18" y=".5" width="{MW - 36}" height="1" fill="url(#hl)"/>
 {"".join(m)}{chips}
-{diagram}
-<svg x="{MW - 24 - 44}" y="16" width="44" height="44" viewBox="0 0 96 96" overflow="visible">{inner}</svg>"""
+<svg x="{MW - 22 - 40}" y="16" width="40" height="40" viewBox="0 0 96 96" overflow="visible">{inner}</svg>
+{diagram}"""
     write("hero-m.svg", dm.svg(MW, MH, f'{hero["name"]} · {T(hero["kicker"]).title()} · {tagline}', mbody, mdefs))
 
 
@@ -689,22 +691,23 @@ def build_about():
 {"".join(right)}"""
     write("about.svg", d.svg(w, h, T(a["text"]), body))
 
-    # celular: terminal de lado a lado em cima, texto e selo embaixo
+    # celular: terminal de lado a lado em cima (o do desktop, reduzido), texto e selo embaixo
     d = Doc()
-    TX, TY = 14, 14
-    TW, TH = MW - 2 * TX, 214
-    log, cy = terminal(d, TX, TY, TW, TH, a["events"])
-    assert cy + 3 < TY + TH - 8, "log do About não cabe no terminal (celular)"
-    y = TY + TH + 34
+    TX, TY, k = 14, 14, 0.8
+    TW, TH = MW - 2 * TX, 214 * 0.8
+    log, cy = terminal(d, 0, 0, TW / k, TH / k, a["events"])
+    assert cy + 3 < TH / k - 8, "log do About não cabe no terminal (celular)"
+    log = f'<g transform="translate({TX} {TY}) scale({k})">{log}</g>'
+    y = TY + TH + 30
     right = []
-    for ln in wrap(T(a["text"]), "l", 16, MW - 44):
-        right.append(d.t(22, y, ln, 16, BODY, "l"))
-        y += 25
-    size = 14
-    while place_pill(Doc(), a, 22, 0, size)[1] > MW - 44:
+    for ln in wrap(T(a["text"]), "l", 14.5, MW - 40):
+        right.append(d.t(20, y, ln, 14.5, BODY, "l"))
+        y += 22
+    size = 13
+    while place_pill(Doc(), a, 20, 0, size)[1] > MW - 40:
         size -= 0.5
-    pill, _ = place_pill(d, a, 22, y - 6, size)
-    h = round(y - 6 + 33 + 22)
+    pill, _ = place_pill(d, a, 20, y - 6, size)
+    h = round(y - 6 + 33 + 20)
     write("about-m.svg", d.svg(MW, h, T(a["text"]), f"{panel(MW, h)}\n{log}\n{''.join(right)}{pill}"))
 
 
@@ -747,62 +750,70 @@ def build_now():
 
 
 def build_topbar_m():
-    """Celular: o idioma, o Agora e o my-links mantêm as larguras do desktop (o README fixa a largura
-    de cada um), mas ficam mais altos, com letra grande; Agora e my-links com a mesma altura."""
-    # Agora: rótulo em cima, manchete e stack quebrando em linhas
+    """Celular: o my-links vira uma pílula ao lado do idioma (só no celular) e a faixa do Agora ocupa
+    a linha toda. O README fixa a largura de cada peça do topo (83% + 17%), então a faixa é feita de
+    duas imagens que se encostam: o Agora (texto) e o lugar do my-links (só a ponta da faixa)."""
     d = Doc()
-    w, _, _ = TOPBAR
-    pad, maxw = 44, w - 88
+    w, mw, _ = TOPBAR
+    pad, maxw = 36, w - 50
     label = T(NOW["label"])
     # cada parte da manchete começa numa linha; o "·" fica no fim da parte anterior
     parts = T(NOW["headline"]).split(" · ")
     head = [ln for k, part in enumerate(parts)
-            for ln in wrap(part + (" ·" if k < len(parts) - 1 else ""), "m", 46, maxw)]
-    stack = pack(NOW["stack"].split(" · "), "mono", 36, maxw)
-    y = 70
-    body = [d.t(pad + 36, y, label, 34, GREEN, "s", ls=6)]
-    dot = (f'<circle cx="{pad + 10}" cy="{y - 12}" r="9" fill="none" stroke="{GREEN}" stroke-width="2.4">'
-           '<animate attributeName="r" values="9;22" dur="2s" repeatCount="indefinite"/>'
+            for ln in wrap(part + (" ·" if k < len(parts) - 1 else ""), "m", 36, maxw)]
+    stack = pack(NOW["stack"].split(" · "), "mono", 30, maxw)
+    y = 64
+    body = [d.t(pad + 32, y, label, 29, GREEN, "s", ls=5)]
+    dot = (f'<circle cx="{pad + 9}" cy="{y - 10}" r="8" fill="none" stroke="{GREEN}" stroke-width="2.2">'
+           '<animate attributeName="r" values="8;20" dur="2s" repeatCount="indefinite"/>'
            '<animate attributeName="stroke-opacity" values="0.7;0" dur="2s" repeatCount="indefinite"/></circle>'
-           f'<circle cx="{pad + 10}" cy="{y - 12}" r="9" fill="{GREEN}">'
+           f'<circle cx="{pad + 9}" cy="{y - 10}" r="8" fill="{GREEN}">'
            '<animate attributeName="fill-opacity" values="1;0.55;1" dur="2s" repeatCount="indefinite"/></circle>')
-    y += 70
+    y += 60
     for ln in head:
-        body.append(d.t(pad, y, ln, 46, TEXT, "m"))
-        y += 60
-    y += 4
+        body.append(d.t(pad, y, ln, 36, TEXT, "m"))
+        y += 48
+    y += 2
     for ln in stack:
-        body.append(d.t(pad, y, ln, 36, BODY, "mono"))
-        y += 50
-    h = round(y - 50 + 48)
-    frame = (f'<rect x="1" y="1" width="{w - 2}" height="{h - 2}" rx="34" fill="url(#surf)" stroke="{GREEN}" stroke-opacity="0.32" stroke-width="2"/>'
-             f'<rect x="2" y="2" width="{w - 4}" height="{h - 4}" rx="33" fill="url(#nowg)"/>')
-    defs = (f'<linearGradient id="nowg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="{GREEN}" stop-opacity="0.12"/>'
+        body.append(d.t(pad, y, ln, 30, BODY, "mono"))
+        y += 41
+    h = round(y - 41 + 38)
+    # a faixa passa da borda direita (o resto dela é a outra imagem)
+    frame = (f'<rect x="1" y="1" width="{w + 60}" height="{h - 2}" rx="32" fill="url(#surf)" stroke="{GREEN}" stroke-opacity="0.32" stroke-width="2"/>'
+             f'<rect x="2" y="2" width="{w + 60}" height="{h - 4}" rx="31" fill="url(#nowg)"/>')
+    defs = (f'<linearGradient id="nowg" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="{w + mw}" y2="0"><stop offset="0" stop-color="{GREEN}" stop-opacity="0.12"/>'
             f'<stop offset="0.6" stop-color="{GREEN}" stop-opacity="0.02"/><stop offset="1" stop-color="{GREEN}" stop-opacity="0"/></linearGradient>')
     write("now-m.svg", d.svg(w, h, f'{label}: {T(NOW["headline"])} · {NOW["stack"]}', frame + dot + "".join(body), defs))
 
-    # my-links: mesma altura do Agora; ícone em cima e o nome embaixo, do maior tamanho que couber
+    # ponta direita da faixa, no lugar do my-links do desktop (mesma altura)
     d = Doc()
-    _, mw, _ = TOPBAR
-    gap, name = TOPGAP, "my-links"
-    size = min(30, 30 * (mw - gap - 18) / width(name, "s", 30))
-    cx = gap + (mw - gap) / 2
-    body = (f'<rect x="{gap + 1}" y="1" width="{mw - gap - 2}" height="{h - 2}" rx="34" fill="url(#surf)" stroke="{CYAN}" stroke-opacity="0.35" stroke-width="2"/>'
-            f'<rect x="{gap + 2}" y="2" width="{mw - gap - 4}" height="{h - 4}" rx="33" fill="{CYAN}" fill-opacity="0.07"/>'
-            f'<g transform="translate({cx - 34:.1f} {h / 2 - 66:.1f}) scale(2.4)" fill="none" stroke="{CYAN}" stroke-width="1.6" stroke-linecap="round">{ICONS["links"]}</g>'
-            + d.t(cx, h / 2 + 44, name, round(size, 1), TEXT, "s", anchor="middle"))
-    write("my-links-m.svg", d.svg(mw, h, "my-links", body))
+    body = (f'<rect x="-60" y="1" width="{mw + 59}" height="{h - 2}" rx="32" fill="url(#surf)" stroke="{GREEN}" stroke-opacity="0.32" stroke-width="2"/>'
+            f'<rect x="-60" y="2" width="{mw + 58}" height="{h - 4}" rx="31" fill="url(#nowg)"/>')
+    defs = defs.replace(f'x1="0" y1="0" x2="{w + mw}"', f'x1="{-w}" y1="0" x2="{mw}"')
+    write("my-links-m.svg", d.svg(mw, h, "my-links", body, defs))
 
-    # idioma: com 14,6% da linha não cabe texto legível; só as duas bandeiras, grandes
+    # my-links em pílula, ao lado do idioma e com a mesma altura (20px na tela)
     d = Doc()
-    lw, lh = TOPBAR[1] - TOPGAP, 64
+    pw, ph = 164, 40
+    name = "my-links"
+    tx = 42
+    assert tx + width(name, "s", 19) < pw - 14, "my-links não cabe na pílula"
+    body = (f'<rect x="1" y="1" width="{pw - 2}" height="{ph - 2}" rx="{ph / 2 - 1}" fill="url(#surf)" stroke="{CYAN}" stroke-opacity="0.4" stroke-width="1.5"/>'
+            f'<rect x="2" y="2" width="{pw - 4}" height="{ph - 4}" rx="{ph / 2 - 2}" fill="{CYAN}" fill-opacity="0.08"/>'
+            f'<g transform="translate(13 7.5) scale(.9)" fill="none" stroke="{CYAN}" stroke-width="2" stroke-linecap="round">{ICONS["links"]}</g>'
+            + d.t(tx, 26.5, name, 19, TEXT, "s"))
+    write("my-links-pill-m.svg", d.svg(pw, ph, "my-links", body, size=(pw / 2, ph / 2)))
+
+    # idioma: com 14,6% da linha (43px) não cabe texto legível; só as duas bandeiras
+    d = Doc()
+    lw, lh = TOPBAR[1] - TOPGAP, 65
     parts = [f'<rect x="1" y="1" width="{lw - 2}" height="{lh - 2}" rx="{lh / 2 - 1}" fill="url(#surf)" stroke="{CHIP_BORDER}" stroke-width="2"/>']
     for i, (code, lang) in enumerate((("gb", "en"), ("br", "pt"))):
         cx = lw / 4 + i * lw / 2
         on = lang == LANG
         if on:
             parts.append(f'<rect x="{cx - 30:.1f}" y="6" width="60" height="{lh - 12}" rx="{(lh - 12) / 2}" fill="#fff" fill-opacity="0.09"/>')
-        parts.append(f'<g transform="translate({cx - 20:.1f} {lh / 2 - 20}) scale(2.5)" opacity="{1 if on else 0.4}"><clipPath id="m{code}"><circle cx="8" cy="8" r="8"/></clipPath>'
+        parts.append(f'<g transform="translate({cx - 19:.1f} {lh / 2 - 19}) scale(2.375)" opacity="{1 if on else 0.4}"><clipPath id="m{code}"><circle cx="8" cy="8" r="8"/></clipPath>'
                      f'<g clip-path="url(#m{code})">{ROUND_FLAG[code]}</g><circle cx="8" cy="8" r="7.75" fill="none" stroke="#fff" stroke-opacity=".25" stroke-width=".4"/></g>')
     write("lang-m.svg", d.svg(lw, lh, "English · Português", "".join(parts)))
 
@@ -963,37 +974,37 @@ def build_projects():
                      f'<rect x="{shot_x + .5}" y="{ty + .5}" width="{TW - 1}" height="{TH - 1}" rx="10" fill="none" stroke="{p["color"]}" stroke-opacity="0.35"/>']
         write(f"project-{p['slug']}.svg", d.svg(w, h, f'{title}: {T(p["desc"])}', "\n".join(body)))
 
-        # celular: miniatura em cima, de lado a lado; texto e chips embaixo
+        # celular: ícone e título, categoria embaixo, chips, miniatura de lado a lado e a descrição
         d = Doc()
-        body, y = [], 14
+        body, y = [], 38
+        tlines = wrap(title, "s", 17, MW - 84)
+        body += [f'<g transform="translate(18 {y - 18}) scale(.86)" fill="{p["color"]}" fill-opacity="0.14" stroke="{p["color"]}" '
+                 f'stroke-width="1.5" stroke-linejoin="round">{ICONS["folder"]}</g>',
+                 arrow(MW - 34, y - 13)]
+        for ln in tlines:
+            body.append(d.t(46, y, ln, 17, TEXT, "s"))
+            y += 23
+        tag = T(p["tag"])
+        assert 34 + width(tag, "s", 10.5, 1.5) < MW - 18, f"categoria estoura: {tag}"
+        body += [f'<circle cx="24" cy="{y - 4.5}" r="3" fill="{p["color"]}"/>',
+                 d.t(34, y - .5, tag, 10.5, LABEL, "s", ls=1.5)]
+        chips, y = chip_rows(d, p["chips"], 18, y + 12, MW - 36, 11.5, 25, 22, 7, LABEL)
+        body.append(chips)
+        y += 14
         if shot:
             sw = MW - 28
             sh = round(sw * TH / TW)
-            body += [f'<clipPath id="th"><rect x="14" y="14" width="{sw}" height="{sh}" rx="10"/></clipPath>',
-                     f'<image x="14" y="14" width="{sw}" height="{sh}" preserveAspectRatio="xMidYMid slice" clip-path="url(#th)" '
+            body += [f'<clipPath id="th"><rect x="14" y="{y}" width="{sw}" height="{sh}" rx="10"/></clipPath>',
+                     f'<image x="14" y="{y}" width="{sw}" height="{sh}" preserveAspectRatio="xMidYMid slice" clip-path="url(#th)" '
                      f'href="data:image/jpeg;base64,{b64}"/>',
-                     f'<rect x="14.5" y="14.5" width="{sw - 1}" height="{sh - 1}" rx="10" fill="none" stroke="{p["color"]}" stroke-opacity="0.35"/>']
+                     f'<rect x="14.5" y="{y + .5}" width="{sw - 1}" height="{sh - 1}" rx="10" fill="none" stroke="{p["color"]}" stroke-opacity="0.35"/>']
             y += sh
-        y += 30
-        tag = T(p["tag"])
-        assert 40 + width(tag, "s", 11.5, 1.6) < MW - 40, f"categoria estoura: {tag}"
-        body += [f'<circle cx="26" cy="{y - 4}" r="3.5" fill="{p["color"]}"/>',
-                 d.t(38, y, tag, 11.5, LABEL, "s", ls=1.6),
-                 arrow(MW - 34, y - 12)]
-        y += 32
-        tlines = wrap(title, "s", 18, MW - 70)
-        body.append(f'<g transform="translate(18 {y - 19}) scale(.92)" fill="{p["color"]}" fill-opacity="0.14" stroke="{p["color"]}" '
-                    f'stroke-width="1.45" stroke-linejoin="round">{ICONS["folder"]}</g>')
-        for ln in tlines:
-            body.append(d.t(48, y, ln, 18, TEXT, "s"))
-            y += 25
-        y += 4
-        for ln in wrap(T(p["desc"]), "r", 14.5, MW - 40):
-            body.append(d.t(20, y, ln, 14.5, DESC, "r"))
-            y += 22
-        chips, y = chip_rows(d, p["chips"], 20, y - 6, MW - 40, 12.5, 28, 26, 8, LABEL)
-        mh = round(y + 18)
-        write(f"project-{p['slug']}-m.svg", d.svg(MW, mh, f'{title}: {T(p["desc"])}', panel(MW, mh) + "\n" + "\n".join(body) + chips))
+        y += 26
+        for ln in wrap(T(p["desc"]), "r", 13.5, MW - 36):
+            body.append(d.t(18, y, ln, 13.5, DESC, "r"))
+            y += 20.5
+        mh = round(y - 20.5 + 22)
+        write(f"project-{p['slug']}-m.svg", d.svg(MW, mh, f'{title}: {T(p["desc"])}', panel(MW, mh) + "\n" + "\n".join(body)))
 
 
 # ── Contato ────────────────────────────────────────────────────────────────
@@ -1436,9 +1447,13 @@ def build_readme():
     now_alt = f'{T(NOW["label"]).title()}: {T(NOW["headline"])} · {NOW["stack"]}'
     topbar = (pic("now", now_alt, f'width="{pn}"')
               + f'<a href="https://andrebecker84.github.io/my-links/">' + pic("my-links", "my-links", f'width="{pm}"') + '</a>')
-    lang = pic("lang", other[0], f'width="{pl}"')
+    # no celular o my-links vira uma pílula ao lado do idioma (no desktop, um ponto transparente à
+    # esquerda dele, que não o tira do lugar)
+    pill = (f'<a href="https://andrebecker84.github.io/my-links/"><picture><source media="{MOBILE}" srcset="{a}/my-links-pill-m.svg">'
+            f'<img src="assets/blank.svg" alt="my-links"></picture></a> ')
+    lang = pill + f'<a href="{other[1]}">' + pic("lang", other[0], f'width="{pl}"') + '</a>'
     out = [f"<!-- Gerado por scripts/build_assets.py — edite os textos lá e rode: python scripts/build_assets.py -->\n",
-           f'<p align="right">\n  <a href="{other[1]}">{lang}</a>\n</p>\n',
+           f'<p align="right">\n  {lang}\n</p>\n',
            f'<p align="center">\n  {topbar}\n</p>\n',
            block(pic("hero", f'{HERO["name"]} · {T(HERO["kicker"]).title()} · {T(HERO["tagline"])}')),
            block(themed("section-about", T(section["about"]).title())),
